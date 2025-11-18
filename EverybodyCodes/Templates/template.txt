@@ -1,0 +1,23 @@
+﻿using CodingChallenge.Utilities.Attributes;
+using CodingChallenge.Utilities.Extensions;
+
+namespace EverybodyCodes{{story}}.Challenges;
+
+//[Challenge({{quest}})]
+public class Quest{{paddedQuest}}
+{
+    //[Part(1{{expected_1}})]
+    //public string Part1(string input)
+    //{
+    //}
+
+	//[Part(2{{expected_2}})]
+    //public string Part2(string input)
+    //{
+    //}
+	
+	//[Part(3{{expected_3}})]
+    //public string Part3(string input)
+    //{
+    //}
+}

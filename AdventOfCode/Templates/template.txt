@@ -1,0 +1,18 @@
+﻿using CodingChallenge.Utilities.Attributes;
+using CodingChallenge.Utilities.Extensions;
+
+namespace AdventOfCode{{year}}.Challenges;
+
+//[Challenge({{day}})]
+public class Challenge{{zeroday}}
+{
+    // [Part(1{{expected_1}})]
+    // public string Part1(string input)
+    // {
+    // }
+
+    // [Part(2{{expected_2}})]
+    // public string Part2(string input)
+    // {
+    // }
+}

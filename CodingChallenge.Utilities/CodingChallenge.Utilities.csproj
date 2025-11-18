@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\docopt.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\aoc_alphabet_l.txt" />
+    <EmbeddedResource Include="Resources\aoc_alphabet_s.txt" />
+    <EmbeddedResource Include="Resources\docopt.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="docopt.net" Version="0.8.1" />
+    <PackageReference Include="Spectre.Console" Version="0.54.0" />
+    <PackageReference Include="TextCopy" Version="6.2.1" />
+  </ItemGroup>
+
+</Project>

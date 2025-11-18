@@ -1,0 +1,9 @@
+﻿Coding challenge runner
+
+Usage:
+  ccr
+  ccr -c <challenge>
+
+Options:
+  -h --help                                Show this screen.
+  -c <challenge>, --challenge <challenge>  Run a specific challenge.

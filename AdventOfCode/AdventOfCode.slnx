@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Years/">
+    <Project Path="Years/2015/2015.csproj" Id="355cafd4-8ca2-4480-b890-a1e9fdeb42a9" />
+    <Project Path="Years/2016/2016.csproj" Id="9eb86b05-a94f-471d-b8ea-4af98f82b4ea" />
+    <Project Path="Years/2019/2019.csproj" Id="aa397a2f-4647-46e1-a741-1cc0db528b38" />
+    <Project Path="Years/2025/2025.csproj" />
+  </Folder>
+  <Project Path="../CodingChallenge.Utilities/CodingChallenge.Utilities.csproj" />
+  <Project Path="Core/AdventOfCode.Core.csproj" />
+  <Project Path="Test/AdventOfCode.Test.csproj" />
+</Solution>

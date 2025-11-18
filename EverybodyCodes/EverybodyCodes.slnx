@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Events/">
+    <Project Path="Events/2024/2024.csproj" />
+  </Folder>
+  <Project Path="../CodingChallenge.Utilities/CodingChallenge.Utilities.csproj" />
+  <Project Path="Core/EverybodyCodes.Core.csproj" />
+</Solution>
