@@ -11,55 +11,57 @@ public class Challenge18
     [Part(1, "768")]
     public string Part1(string input)
     {
-        var db = new FlipBuffer<Grid2<char>>(input.ToGrid(), new Grid2<char>(100, 100));
+        var read = input.ToGrid();
+        var write = new Grid2<char>(100, 100);
 
         for (var i = 0; i < 100; i++)
         {
-            foreach (var p in db.Read.Keys)
+            foreach (var p in read.Keys)
             {
                 var onCount = p
                     .GetNeighbors(true)
-                    .Where(db.Read.Bounds.Contains)
-                    .Count(n => db.Read[n] == '#');
+                    .Where(read.Bounds.Contains)
+                    .Count(n => read[n] == '#');
 
-                db.Write[p] = db.Read[p] == '#'
+                write[p] = read[p] == '#'
                     ? onCount == 2 || onCount == 3 ? '#' : '.'
                     : onCount == 3 ? '#' : '.';
             }
 
-            db.Flip();
+            (read, write) = (write, read);
         }
 
-        return Enumerable.Range(0, 100 * 100).Count(i => db.Read[i / 100, i % 100] == '#').ToString();
+        return Enumerable.Range(0, 100 * 100).Count(i => read[i / 100, i % 100] == '#').ToString();
     }
 
     [Part(2, "781")]
     public string Part2(string input)
     {
-        var db = new FlipBuffer<Grid2<char>>(input.ToGrid(), new Grid2<char>(100, 100));
+        var read = input.ToGrid();
+        var write = new Grid2<char>(100, 100);
 
         for (var i = 0; i < 100; i++)
         {
-            foreach (var p in db.Read.Keys)
+            foreach (var p in read.Keys)
             {
                 var onCount = p
                     .GetNeighbors(true)
-                    .Where(db.Read.Bounds.Contains)
-                    .Count(n => db.Read[n] == '#');
+                    .Where(read.Bounds.Contains)
+                    .Count(n => read[n] == '#');
 
-                db.Write[p] = db.Read[p] == '#'
+                write[p] = read[p] == '#'
                     ? onCount == 2 || onCount == 3 ? '#' : '.'
                     : onCount == 3 ? '#' : '.';
             }
 
-            db.Write[0, 0] = '#';
-            db.Write[0, 99] = '#';
-            db.Write[99, 0] = '#';
-            db.Write[99, 99] = '#';
+            write[0, 0] = '#';
+            write[0, 99] = '#';
+            write[99, 0] = '#';
+            write[99, 99] = '#';
 
-            db.Flip();
+            (read, write) = (write, read);
         }
 
-        return Enumerable.Range(0, 100 * 100).Count(i => db.Read[i / 100, i % 100] == '#').ToString();
+        return Enumerable.Range(0, 100 * 100).Count(i => read[i / 100, i % 100] == '#').ToString();
     }
 }

@@ -58,9 +58,9 @@ namespace CodingChallenge.Utilities
 
         public Grid2(int rows, int columns) : this(new T[rows, columns]) { }
 
-        public int Width => Bounds.Width;
+        public int Columns => Bounds.Width;
 
-        public int Height => Bounds.Height;
+        public int Rows => Bounds.Height;
 
         public Rectangle Bounds { get; }
 

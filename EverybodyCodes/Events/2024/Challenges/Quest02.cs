@@ -61,17 +61,17 @@ public class Quest02
 
         foreach (var rune in runes.Concat(runes.Select(r => r.Reverse().AsString())))
         {
-            for (var y = 0; y < symbols.Height; y++)
+            for (var y = 0; y < symbols.Rows; y++)
             {
                 var row = symbols.Row(y).ToArray();
-                for (var x = 0; x < symbols.Width; x++)
+                for (var x = 0; x < symbols.Columns; x++)
                     Mark(row, x, rune, true);
             }
 
-            for (var x = 0; x < symbols.Width; x++)
+            for (var x = 0; x < symbols.Columns; x++)
             {
                 var column = symbols.Column(x).ToArray();
-                for (var y = 0; y < symbols.Height; y++)
+                for (var y = 0; y < symbols.Rows; y++)
                     Mark(column, y, rune);
             }
         }

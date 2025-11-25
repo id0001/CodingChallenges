@@ -24,5 +24,22 @@
                 return result;
             }
         }
+
+        extension<TSource>(Grid2<TSource> source)
+        {
+            public TSource[,] To2dArray()
+            {
+                ArgumentNullException.ThrowIfNull(source);
+
+                var result = new TSource[source.Rows, source.Columns];
+                for (var y = 0; y < source.Rows; y++)
+                {
+                    for (var x = 0; x < source.Columns; x++)
+                        result[y, x] = source[y, x];
+                }
+
+                return result;
+            }
+        }
     }
 }
