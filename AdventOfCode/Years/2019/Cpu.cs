@@ -11,9 +11,11 @@ namespace AdventOfCode2019
         private int _ip = 0;
         private TMemory[] _memory = [];
         private TMemory _relativeBase = TMemory.Zero;
+        private TMemory[] _program;
 
         public Cpu(TMemory[] program)
         {
+            _program = program;
             _memory = new TMemory[1_000_000];
             Array.Copy(program, _memory, program.Length);
         }
@@ -78,6 +80,16 @@ namespace AdventOfCode2019
                 Next();
 
             return ExitCode;
+        }
+
+        public void Reset()
+        {
+            _ip = 0;
+            _relativeBase = TMemory.Zero;
+            _inputBuffer.Clear();
+            _outputBuffer.Clear();
+
+            Array.Copy(_program, _memory, _program.Length);
         }
 
         private TMemory GetValue(int offset)
