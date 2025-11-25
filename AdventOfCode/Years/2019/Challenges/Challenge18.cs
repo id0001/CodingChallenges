@@ -1,8 +1,8 @@
 using CodingChallenge.Utilities;
 using CodingChallenge.Utilities.Attributes;
-using CodingChallenge.Utilities.Extensions;
 using CodingChallenge.Utilities.Collections.Graphs;
-using System.Net.WebSockets;
+using CodingChallenge.Utilities.Collections.Immutable;
+using CodingChallenge.Utilities.Extensions;
 
 namespace AdventOfCode2019.Challenges;
 
@@ -15,82 +15,124 @@ public class Challenge18
     public string Part1(string input)
     {
         var grid = input.ToGrid();
-        var edges = AnalyzeMaze(grid);
+        var center = grid.Single(x => x.Value == '@').Key;
 
-        var (path, cost) = Graph.ImplicitWeighted<Node, int>(c => GetAdjacent(edges, c)).Dijkstra().ShortestPath(new Node('@', 0), n => (n.KeysObtained & AllKeyMask) == AllKeyMask);
-        return (cost).ToString();
+        var maze = AnalyzeMaze(grid, center);
+
+        var (path, cost) = Graph
+            .ImplicitWeighted<DroneState1, int>(c => GetAjacentPart1(grid, maze, c))
+            .Dijkstra()
+            .ShortestPath(new DroneState1(center, 0), c => IsFinished(c.ObtainedKeys));
+
+        return cost.ToString();
     }
 
-    // [Part(2, "2194")]
-    //public string Part2(string input)
-    //{
-    //    throw new NoResultException();
-    //}
-
-    private static IEnumerable<WeightedEdge<Node, int>> GetAdjacent(ILookup<char, Edge> edges, Node current)
+    [Part(2, "2194")]
+    public string Part2(string input)
     {
-        foreach (var edge in edges[current.Id])
+        var grid = input.ToGrid();
+        var center = grid.Single(x => x.Value == '@').Key;
+
+        grid[center.Left] = '#';
+        grid[center.Up] = '#';
+        grid[center.Right] = '#';
+        grid[center.Down] = '#';
+        grid[center] = '#';
+
+        var starts = new Point2[4];
+        starts[0] = center + new Point2(-1, -1);
+        starts[1] = center + new Point2(1, -1);
+        starts[2] = center + new Point2(-1, 1);
+        starts[3] = center + new Point2(1, 1);
+
+        var maze = AnalyzeMaze(grid, starts);
+
+        var start = new DroneState2(new ImmutableValueArray<Point2>(starts), 0);
+        var (path, cost) = Graph
+            .ImplicitWeighted<DroneState2, int>(c => GetAjacentPart2(grid, maze, c))
+            .Dijkstra()
+            .ShortestPath(start, c => IsFinished(c.ObtainedKeys));
+
+        return cost.ToString();
+    }
+
+    private static IEnumerable<WeightedEdge<DroneState1, int>> GetAjacentPart1(Grid2<char> grid, ILookup<Point2, MazeEdge> edges, DroneState1 current)
+    {
+        foreach (var edge in edges[current.Position])
         {
-            if ((edge.KeysRequired & current.KeysObtained) == edge.KeysRequired)
+            if (HasRequiredKeys(current.ObtainedKeys, edge.KeysRequired))
             {
-                int keys = current.KeysObtained.SetBit(edge.To - 'a', true);
-                yield return new WeightedEdge<Node, int>(current, new Node(edge.To, keys), edge.Distance);
+                var keys = current.ObtainedKeys.SetBit(grid[edge.To] - 'a', true);
+                yield return new WeightedEdge<DroneState1, int>(current, new DroneState1(edge.To, keys), edge.Distance);
             }
         }
     }
 
-    private static ILookup<char, Edge> AnalyzeMaze(Grid2<char> grid)
+    private static IEnumerable<WeightedEdge<DroneState2, int>> GetAjacentPart2(Grid2<char> grid, ILookup<Point2, MazeEdge> edges, DroneState2 current)
     {
-        var keys = new Dictionary<Point2, char>();
-        var doors = new Dictionary<Point2, char>();
-        Point2 start = Point2.Zero;
-        foreach (var (p, c) in grid)
+        for (var i = 0; i < 4; i++)
         {
-            switch (c)
+            foreach (var edge in edges[current.Positions[i]])
             {
-                case var _ when char.IsUpper(c):
-                    doors.Add(p, c);
-                    break;
-                case var _ when char.IsLower(c):
-                    keys.Add(p, c);
-                    break;
-                case '@':
-                    start = p;
-                    break;
-                default:
-                    break;
+                if (HasRequiredKeys(current.ObtainedKeys, edge.KeysRequired))
+                {
+                    var keys = current.ObtainedKeys.SetBit(grid[edge.To] - 'a', true);
+                    yield return new WeightedEdge<DroneState2, int>(current, new DroneState2(current.Positions.SetItem(i, edge.To), keys), edge.Distance);
+                }
             }
         }
+    }
 
-        var edges = new List<Edge>();
-        var bfs = Graph.Implicit<Point2>(c => GetAdjacentOnGrid(grid, c)).Bfs();
+    private static ILookup<Point2, MazeEdge> AnalyzeMaze(Grid2<char> grid, params Point2[] starts)
+    {
+        var edges = new List<MazeEdge>();
+        var keys = grid.Where(kv => char.IsAsciiLetterLower(kv.Value)).Select(x => x.Key).ToList();
 
-        var lookup = Flood(grid, start);
-        foreach (var key in keys.Keys)
-        {
-            var (distance, reqKeys) = lookup[key];
-            edges.Add(new Edge('@', keys[key], reqKeys, distance));
-        }
-
-        var lookupAll = new Dictionary<Point2, Dictionary<Point2, (int, int)>>();
-        foreach(var pair in keys.Keys.Combinations(2))
-        {
-            if (!lookupAll.TryGetValue(pair[0], out lookup))
-            {
-                lookup = Flood(grid, pair[0]);
-                lookupAll.Add(pair[0], lookup);
-            }
-
-            var (distance, reqKeys) = lookup[pair[1]];
-            edges.Add(new Edge(keys[pair[0]], keys[pair[1]], reqKeys, distance));
-            edges.Add(new Edge(keys[pair[1]], keys[pair[0]], reqKeys, distance));
-        }
+        foreach (var vertex in starts.Concat(keys))
+            foreach (var edge in FindEdges(grid, vertex))
+                edges.Add(edge);
 
         return edges.ToLookup(kv => kv.From);
     }
 
+    /// <summary>
+    /// Flood fill to find all reachable vertices
+    /// </summary>
+    /// <param name="grid"></param>
+    /// <param name="from"></param>
+    /// <returns></returns>
+    private static IEnumerable<MazeEdge> FindEdges(Grid2<char> grid, Point2 from)
+    {
+        Queue<Point2> queue = new([from]);
+        Dictionary<Point2, (int, int)> visited = new() { [from] = (0, 0) };
 
-    private static IEnumerable<Edge<Point2>> GetAdjacentOnGrid(Grid2<char> grid, Point2 current)
+        while (queue.Count > 0)
+        {
+            var currentVertex = queue.Dequeue();
+            var (distance, keys) = visited[currentVertex];
+
+            if (from != currentVertex && char.IsAsciiLetterLower(grid[currentVertex]))
+            {
+                yield return new MazeEdge(from, currentVertex, keys, distance);
+                continue;
+            }
+
+            foreach (var nextEdge in GetAjacentOnGrid(grid, currentVertex))
+            {
+                if (visited.ContainsKey(nextEdge.Target))
+                    continue;
+
+                var newKeys = keys;
+                if (char.IsAsciiLetterUpper(grid[nextEdge.Target]))
+                    newKeys = newKeys.SetBit(grid[nextEdge.Target] - 'A', true);
+
+                visited.Add(nextEdge.Target, (distance + 1, newKeys));
+                queue.Enqueue(nextEdge.Target);
+            }
+        }
+    }
+
+    private static IEnumerable<Edge<Point2>> GetAjacentOnGrid(Grid2<char> grid, Point2 current)
     {
         foreach (var neighbor in current.GetNeighbors())
         {
@@ -99,39 +141,11 @@ public class Challenge18
         }
     }
 
-    private static Dictionary<Point2, (int Distance, int Keys)> Flood(Grid2<char> grid, Point2 start)
-    {
-        Queue<Point2> queue = new([start]);
-        Dictionary<Point2, (int, int)> visited = new() { [start] = (0, 0) };
+    private static bool HasRequiredKeys(int obtainedKeys, int requiredKeys) => (obtainedKeys & requiredKeys) == requiredKeys;
 
-        var result = new List<(Point2 Vertex, int Distance, int Keys)>();
+    private static bool IsFinished(int obtainedKeys) => (obtainedKeys & AllKeyMask) == AllKeyMask;
 
-        while (queue.Count > 0)
-        {
-            var currentVertex = queue.Dequeue();
-            var (distance, keys) = visited[currentVertex];
-
-            if (char.IsLower(grid[currentVertex]))
-                result.Add((currentVertex, distance, keys));
-
-            foreach (var nextEdge in GetAdjacentOnGrid(grid, currentVertex))
-            {
-                if (visited.ContainsKey(nextEdge.Target))
-                    continue;
-
-                var newKeys = keys;
-                if (char.IsUpper(grid[nextEdge.Target]))
-                    newKeys = keys.SetBit(grid[nextEdge.Target] - 'A', true);
-
-                visited.Add(nextEdge.Target, (distance + 1, newKeys));
-                queue.Enqueue(nextEdge.Target);
-            }
-        }
-
-        return result.ToDictionary(kv => kv.Vertex, kv => (kv.Distance, kv.Keys));
-    }
-
-    private record Node(char Id, int KeysObtained);
-
-    private record Edge(char From, char To, int KeysRequired, int Distance);
+    private record MazeEdge(Point2 From, Point2 To, int KeysRequired, int Distance);
+    private record DroneState1(Point2 Position, int ObtainedKeys);
+    private record DroneState2(ImmutableValueArray<Point2> Positions, int ObtainedKeys);
 }

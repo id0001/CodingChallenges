@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Collections.Specialized;
 
-namespace CodingChallenge.Utilities.Collections
+namespace CodingChallenge.Utilities.Collections.Immutable
 {
     public readonly record struct ImmutableBitVector32 : IEquatable<ImmutableBitVector32>
     {

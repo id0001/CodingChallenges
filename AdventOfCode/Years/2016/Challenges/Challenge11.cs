@@ -1,7 +1,7 @@
 using CodingChallenge.Utilities.Attributes;
-using CodingChallenge.Utilities.Collections;
 using CodingChallenge.Utilities.Extensions;
 using CodingChallenge.Utilities.Collections.Graphs;
+using CodingChallenge.Utilities.Collections.Immutable;
 
 namespace AdventOfCode2016.Challenges;
 
