@@ -117,7 +117,7 @@ public class Challenge18
                 continue;
             }
 
-            foreach (var nextEdge in GetAjacentOnGrid(grid, currentVertex))
+            foreach (var nextEdge in GetAdjacentOnGrid(grid, currentVertex))
             {
                 if (visited.ContainsKey(nextEdge.Target))
                     continue;
@@ -132,7 +132,7 @@ public class Challenge18
         }
     }
 
-    private static IEnumerable<Edge<Point2>> GetAjacentOnGrid(Grid2<char> grid, Point2 current)
+    private static IEnumerable<Edge<Point2>> GetAdjacentOnGrid(Grid2<char> grid, Point2 current)
     {
         foreach (var neighbor in current.GetNeighbors())
         {

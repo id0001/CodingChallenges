@@ -8,7 +8,7 @@
             {
                 ArgumentException.ThrowIfNullOrWhiteSpace(source);
 
-                var lines = source.Lines().ToArray();
+                var lines = source.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
                 char[,] grid = new char[lines.Length, lines[0].Length];
                 for (var row = 0; row < grid.GetLength(0); row++)
                 {
