@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 using System.Text;
 
 namespace CodingChallenge.Utilities
@@ -46,6 +47,7 @@ namespace CodingChallenge.Utilities
         }
     }
 
+    [DebuggerDisplay("{DebuggerView,nq}")]
     public sealed class Grid2<T> : IEnumerable<KeyValuePair<Point2, T>>
     {
         private readonly T[,] _grid;
@@ -79,6 +81,8 @@ namespace CodingChallenge.Utilities
             get => _grid[coords.Y, coords.X];
             set => _grid[coords.Y, coords.X] = value;
         }
+
+        internal string DebuggerView => ToString();
 
         public override string ToString()
         {
