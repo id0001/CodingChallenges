@@ -1,11 +1,9 @@
-﻿using CodingChallenge.Utilities.Collections.Graphs;
-
-namespace CodingChallenge.Utilities.Extensions
+﻿namespace CodingChallenge.Utilities.Extensions
 {
     public static partial class BfsExtensions
     {
         private static TVertex[] BuildPath<TVertex>(TVertex end, IDictionary<TVertex, TVertex> cameFrom)
-           where TVertex : notnull
+           where TVertex : notnull, IEquatable<TVertex>
         {
             var stack = new Stack<TVertex>();
             var current = end;
@@ -18,7 +16,7 @@ namespace CodingChallenge.Utilities.Extensions
         }
 
         private static List<TVertex[]> BuildPaths<TVertex>(TVertex start, TVertex end, IDictionary<TVertex, HashSet<TVertex>> previous)
-            where TVertex : notnull
+            where TVertex : notnull, IEquatable<TVertex>
         {
             var paths = new List<TVertex[]>();
             var stack = new Stack<(TVertex currentNode, TVertex[] path)>();
@@ -52,8 +50,4 @@ namespace CodingChallenge.Utilities.Extensions
             return paths;
         }
     }
-
-    public record Bfs<TVertex, TEdge>(ISearchableGraph<TVertex, TEdge> Graph)
-        where TVertex : notnull
-        where TEdge : notnull, Edge<TVertex>;
 }

@@ -2,13 +2,13 @@
 {
     public static class Graph
     {
-        public static ImplicitGraph<TVertex, Edge<TVertex>> Implicit<TVertex>(Func<TVertex, IEnumerable<Edge<TVertex>>> getAdjacent)
-            where TVertex : notnull
-            => new ImplicitGraph<TVertex, Edge<TVertex>>(getAdjacent);
+        public static ImplicitSearchGraph<TVertex, Edge<TVertex>> Implicit<TVertex>(Func<TVertex, IEnumerable<Edge<TVertex>>> getAdjacent)
+            where TVertex : notnull, IEquatable<TVertex>
+            => new ImplicitSearchGraph<TVertex, Edge<TVertex>>(getAdjacent);
 
-        public static ImplicitGraph<TVertex, WeightedEdge<TVertex, TWeight>> ImplicitWeighted<TVertex, TWeight>(Func<TVertex, IEnumerable<WeightedEdge<TVertex, TWeight>>> getAdjacent)
-            where TVertex : notnull
+        public static ImplicitSearchGraph<TVertex, WeightedEdge<TVertex, TWeight>> ImplicitWeighted<TVertex, TWeight>(Func<TVertex, IEnumerable<WeightedEdge<TVertex, TWeight>>> getAdjacent)
+            where TVertex : notnull, IEquatable<TVertex>
             where TWeight : notnull
-            => new ImplicitGraph<TVertex, WeightedEdge<TVertex, TWeight>>(getAdjacent);
+            => new ImplicitSearchGraph<TVertex, WeightedEdge<TVertex, TWeight>>(getAdjacent);
     }
 }

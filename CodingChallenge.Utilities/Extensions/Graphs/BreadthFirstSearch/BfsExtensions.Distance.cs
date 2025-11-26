@@ -1,11 +1,12 @@
 ﻿using CodingChallenge.Utilities.Collections.Graphs;
+using CodingChallenge.Utilities.Collections.Graphs.Algorithms;
 
 namespace CodingChallenge.Utilities.Extensions
 {
     public static partial class BfsExtensions
     {
-        extension<TVertex, TEdge>(Bfs<TVertex, TEdge> source)
-            where TVertex : notnull
+        extension<TVertex, TEdge>(BreadthFirstSearchAlgorithm<TVertex, TEdge> source)
+            where TVertex : notnull, IEquatable<TVertex>
             where TEdge : notnull, Edge<TVertex>
         {
             public int Distance(TVertex from, TVertex to)
@@ -24,7 +25,7 @@ namespace CodingChallenge.Utilities.Extensions
                     if (isFinished(currentVertex))
                         return distance;
 
-                    foreach (var nextEdge in source.Graph.OutEdges(currentVertex))
+                    foreach (var nextEdge in source.OutEdges(currentVertex))
                     {
                         if (visited.ContainsKey(nextEdge.Target))
                             continue;

@@ -1,16 +1,9 @@
 ﻿namespace CodingChallenge.Utilities.Collections.Graphs
 {
-    public interface IEdge<TVertex>
-        where TVertex : notnull
-    {
-        TVertex Source { get; }
-        TVertex Target { get; }
-    }
+    public record Edge<TVertex>(TVertex Source, TVertex Target)
+        where TVertex : notnull, IEquatable<TVertex>;
 
-    public record Edge<TVertex>(TVertex Source, TVertex Target) : IEdge<TVertex>
-        where TVertex : notnull;
-
-    public record WeightedEdge<TVertex, TWeight>(TVertex Source, TVertex Target, TWeight Weight) :IEdge<TVertex>
-        where TVertex : notnull
+    public record WeightedEdge<TVertex, TWeight>(TVertex Source, TVertex Target, TWeight Weight) : Edge<TVertex>(Source, Target)
+        where TVertex : notnull, IEquatable<TVertex>
         where TWeight : notnull;
 }

@@ -11,7 +11,7 @@ public class Challenge13
     [Part(1, "90")]
     public string Part1(string input)
     {
-        var graph = new ImplicitGraph<Point2, Edge<Point2>>(c => GetAjacent(c, input.As<int>()));
+        var graph = new ImplicitSearchGraph<Point2, Edge<Point2>>(c => GetAjacent(c, input.As<int>()));
 
         return (graph.Bfs().ShortestPath(Point2.One, new Point2(31, 39)).Length - 1).ToString();
     }
@@ -19,7 +19,7 @@ public class Challenge13
     [Part(2, "135")]
     public string Part2(string input)
     {
-        var graph = new ImplicitGraph<Point2, Edge<Point2>>(c => GetAjacent(c, input.As<int>()));
+        var graph = new ImplicitSearchGraph<Point2, Edge<Point2>>(c => GetAjacent(c, input.As<int>()));
 
         return graph.Bfs().FloodFill(Point2.One, 50).Count().ToString();
     }

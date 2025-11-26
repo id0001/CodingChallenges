@@ -1,4 +1,5 @@
 ﻿using CodingChallenge.Utilities.Collections.Graphs;
+using CodingChallenge.Utilities.Collections.Graphs.Algorithms;
 using CodingChallenge.Utilities.Collections.Trees;
 using CodingChallenge.Utilities.Exceptions;
 
@@ -6,7 +7,7 @@ namespace CodingChallenge.Utilities.Extensions
 {
     public static partial class DfsExtensions
     {
-        extension<TVertex, TEdge>(Dfs<TVertex, TEdge> source)
+        extension<TVertex, TEdge>(DepthFirstSearchAlgorithm<TVertex, TEdge> source)
             where TVertex : notnull, IEquatable<TVertex>
             where TEdge : notnull, Edge<TVertex>
         {
@@ -49,7 +50,7 @@ namespace CodingChallenge.Utilities.Extensions
                         continue;
                     }
 
-                    foreach (var nextEdge in source.Graph.OutEdges(currentNode.Value))
+                    foreach (var nextEdge in source.OutEdges(currentNode.Value))
                     {
                         var node = currentNode.AddChild(nextEdge.Target);
                         stack.Push(node);

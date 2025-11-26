@@ -1,12 +1,13 @@
 ﻿using CodingChallenge.Utilities.Collections.Graphs;
+using CodingChallenge.Utilities.Collections.Graphs.Algorithms;
 
 namespace CodingChallenge.Utilities.Extensions
 {
     public static partial class BfsExtensions
     {
-        extension<TVertex, TEdge>(Bfs<TVertex, TEdge> source)
+        extension<TVertex, TEdge>(BreadthFirstSearchAlgorithm<TVertex, TEdge> source)
             where TVertex : notnull, IEquatable<TVertex>
-                where TEdge : notnull, Edge<TVertex>
+            where TEdge : notnull, Edge<TVertex>
         {
             public IEnumerable<TVertex[]> AllPaths(TVertex from, TVertex to) => AllPaths(source, from, c => c.Equals(to));
 
@@ -28,7 +29,7 @@ namespace CodingChallenge.Utilities.Extensions
                         continue;
                     }
 
-                    foreach (var nextVertex in source.Graph.OutEdges(currentVertex))
+                    foreach (var nextVertex in source.OutEdges(currentVertex))
                     {
                         if (Array.IndexOf(currentPath, nextVertex.Target) == -1)
                             queue.Enqueue([.. currentPath, nextVertex.Target]);

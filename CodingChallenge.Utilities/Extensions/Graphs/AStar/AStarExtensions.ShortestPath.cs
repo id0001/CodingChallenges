@@ -1,11 +1,12 @@
 ﻿using CodingChallenge.Utilities.Collections.Graphs;
+using CodingChallenge.Utilities.Collections.Graphs.Algorithms;
 using CodingChallenge.Utilities.Exceptions;
 
 namespace CodingChallenge.Utilities.Extensions
 {
     public static partial class AStarExtensions
     {
-        extension<TVertex, TEdge>(AStar<TVertex, TEdge> source)
+        extension<TVertex, TEdge>(AStarAlgorithm<TVertex, TEdge> source)
             where TVertex : notnull, IEquatable<TVertex>
             where TEdge : notnull, WeightedEdge<TVertex, int>
         {
@@ -43,7 +44,7 @@ namespace CodingChallenge.Utilities.Extensions
                         return true;
                     }
 
-                    foreach (var nextEdge in source.Graph.OutEdges(currentVertex))
+                    foreach (var nextEdge in source.OutEdges(currentVertex))
                     {
                         var newCost = costSoFar[currentVertex] + nextEdge.Weight;
                         if (!costSoFar.ContainsKey(nextEdge.Target) || newCost < costSoFar[nextEdge.Target])

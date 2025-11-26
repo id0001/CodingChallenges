@@ -1,13 +1,14 @@
 ﻿using CodingChallenge.Utilities.Collections.Graphs;
+using CodingChallenge.Utilities.Collections.Graphs.Algorithms;
 using CodingChallenge.Utilities.Exceptions;
 
 namespace CodingChallenge.Utilities.Extensions
 {
     public static partial class BfsExtensions
     {
-        extension<TVertex, TEdge>(Bfs<TVertex, TEdge> source)
-            where TVertex : notnull
-                where TEdge : notnull, Edge<TVertex>
+        extension<TVertex, TEdge>(BreadthFirstSearchAlgorithm<TVertex, TEdge> source)
+            where TVertex : notnull, IEquatable<TVertex>
+            where TEdge : notnull, Edge<TVertex>
         {
             public TVertex[] ShortestPath(TVertex from, TVertex to)
                 => ShortestPath(source, from, c => c.Equals(to));
@@ -42,7 +43,7 @@ namespace CodingChallenge.Utilities.Extensions
                         return true;
                     }
 
-                    foreach (var nextEdge in source.Graph.OutEdges(currentVertex))
+                    foreach (var nextEdge in source.OutEdges(currentVertex))
                     {
                         if (visited.Contains(nextEdge.Target))
                             continue;

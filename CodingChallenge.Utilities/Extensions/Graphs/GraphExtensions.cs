@@ -1,29 +1,44 @@
 ﻿using CodingChallenge.Utilities.Collections.Graphs;
+using CodingChallenge.Utilities.Collections.Graphs.Algorithms;
 
 namespace CodingChallenge.Utilities.Extensions
 {
     public static class GraphExtensions
     {
-        extension<TVertex, TEdge>(ISearchableGraph<TVertex, TEdge> source)
-            where TVertex : notnull
+        extension<TVertex, TEdge>(IImplicitGraph<TVertex, TEdge> source)
+            where TVertex : notnull, IEquatable<TVertex>
             where TEdge : notnull, WeightedEdge<TVertex, int>
         {
-            public AStar<TVertex, TEdge> AStar(Func<TVertex, int> heuristic)
-                => new AStar<TVertex, TEdge>(source, heuristic);
+            public AStarAlgorithm<TVertex, TEdge> AStar(Func<TVertex, int> heuristic)
+                => new AStarAlgorithm<TVertex, TEdge>(source.OutEdges, heuristic);
 
-            public AStar<TVertex, TEdge> Dijkstra()
-                => new AStar<TVertex, TEdge>(source, _ => 0);
+            public AStarAlgorithm<TVertex, TEdge> Dijkstra()
+                => new AStarAlgorithm<TVertex, TEdge>(source.OutEdges, _ => 0);
         }
 
-        extension<TVertex, TEdge>(ISearchableGraph<TVertex, TEdge> source)
-            where TVertex : notnull
+        extension<TVertex, TEdge>(IImplicitGraph<TVertex, TEdge> source)
+            where TVertex : notnull, IEquatable<TVertex>
             where TEdge : notnull, Edge<TVertex>
         {
-            public Bfs<TVertex, TEdge> Bfs()
-            => new Bfs<TVertex, TEdge>(source);
+            public BreadthFirstSearchAlgorithm<TVertex, TEdge> Bfs()
+            => new BreadthFirstSearchAlgorithm<TVertex, TEdge>(source.OutEdges);
 
-            public Dfs<TVertex, TEdge> Dfs()
-                => new Dfs<TVertex, TEdge>(source);
+            public DepthFirstSearchAlgorithm<TVertex, TEdge> Dfs()
+                => new DepthFirstSearchAlgorithm<TVertex, TEdge>(source.OutEdges);
+        }
+
+        extension<TVertex, TEdge>(IExplicitGraph<TVertex, TEdge> source)
+            where TVertex : notnull, IEquatable<TVertex>
+            where TEdge : notnull, WeightedEdge<TVertex, int>
+        {
+            public FloydWarshallAlgorithm<TVertex, TEdge> FloydWarshall()
+            {
+                ArgumentNullException.ThrowIfNull(source);
+
+                var vertices = source.Vertices.ToList();
+                var edges = vertices.SelectMany(source.OutEdges).ToList();
+                return new FloydWarshallAlgorithm<TVertex, TEdge>(vertices, edges);
+            }
         }
     }
 }

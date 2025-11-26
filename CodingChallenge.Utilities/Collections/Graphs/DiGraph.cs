@@ -2,8 +2,8 @@
 namespace CodingChallenge.Utilities.Collections.Graphs
 {
     public class DiGraph<TVertex, TEdge> : IExplicitGraph<TVertex, TEdge>
-        where TVertex : notnull
-        where TEdge : IEdge<TVertex>
+        where TVertex : notnull, IEquatable<TVertex>
+        where TEdge : notnull, Edge<TVertex>
     {
         private readonly Dictionary<TVertex, List<TEdge>> _vertexInEdges = new();
         private readonly Dictionary<TVertex, List<TEdge>> _vertexOutEdges = new();

@@ -6,7 +6,7 @@ namespace CodingChallenge.Utilities.Extensions
     public static partial class DfsExtensions
     {
         private static TVertex[] BuildPath<TVertex>(GenericTree<TVertex> end)
-           where TVertex : notnull
+           where TVertex : notnull, IEquatable<TVertex>
         {
             var stack = new Stack<TVertex>();
             var current = end;
@@ -18,8 +18,4 @@ namespace CodingChallenge.Utilities.Extensions
             return stack.ToArray();
         }
     }
-
-    public sealed record Dfs<TVertex, TEdge>(ISearchableGraph<TVertex, TEdge> Graph)
-        where TVertex : notnull
-        where TEdge : notnull, Edge<TVertex>;
 }
