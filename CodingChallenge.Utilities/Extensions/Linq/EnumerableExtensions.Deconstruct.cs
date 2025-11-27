@@ -4,7 +4,7 @@
     {
         extension<TSource>(IEnumerable<TSource> source)
         {
-            public void Deconstruct(out TSource? first, out IEnumerable<TSource> rest)
+            public void Deconstruct(out TSource first, out IEnumerable<TSource> rest)
             {
                 ArgumentNullException.ThrowIfNull(source);
 
@@ -18,7 +18,7 @@
                 rest = YieldRest(enumerator);
             }
 
-            public void Deconstruct(out TSource? first, out TSource? second, out IEnumerable<TSource> rest)
+            public void Deconstruct(out TSource first, out TSource second, out IEnumerable<TSource> rest)
             {
                 ArgumentNullException.ThrowIfNull(source);
 
@@ -37,7 +37,7 @@
                 rest = YieldRest(enumerator);
             }
 
-            public void Deconstruct(out TSource? first, out TSource? second, out TSource? third, out IEnumerable<TSource> rest)
+            public void Deconstruct(out TSource first, out TSource second, out TSource third, out IEnumerable<TSource> rest)
             {
                 ArgumentNullException.ThrowIfNull(source);
 

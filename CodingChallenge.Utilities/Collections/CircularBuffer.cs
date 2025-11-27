@@ -17,6 +17,7 @@ namespace CodingChallenge.Utilities.Collections
         public CircularBuffer(IEnumerable<T> source)
         {
             _array = source.ToArray();
+            _count = _array.Length;
         }
 
         public T this[int index]
@@ -93,9 +94,7 @@ namespace CodingChallenge.Utilities.Collections
 
         private int InternalIndex(int index)
         {
-            ArgumentOutOfRangeException.ThrowIfLessThan(index, 0);
-            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, _count);
-            return (_head + index) % _array.Length;
+            return (_head + (index % _count)) % _array.Length;
         }
     }
 }

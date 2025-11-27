@@ -245,6 +245,58 @@ namespace CodingChallenge.Utilities.Extensions
                 return true;
             }
 
+            public (T1 First, T2 Second, T3 Third, T4 Fourth, T5 Fifth, T6 Sixth) Extract<T1, T2, T3, T4, T5, T6>([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
+                where T1 : IConvertible
+                where T2 : IConvertible
+                where T3 : IConvertible
+                where T4 : IConvertible
+                where T5 : IConvertible
+                where T6 : IConvertible
+            {
+                ArgumentException.ThrowIfNullOrEmpty(source);
+                ArgumentException.ThrowIfNullOrWhiteSpace(pattern);
+
+                var match = Regex.Match(source, pattern);
+                if (!match.Success)
+                    throw new InvalidOperationException("Regex was unsuccessful");
+
+                var items = match.Groups.Values.Skip(1).Select(g => g.Value).ToArray();
+                if (items.Length != 6)
+                    throw new InvalidOperationException($"Incorrect amount of matching groups. Expected 6, got {items.Length}");
+
+                return (items[0].As<T1>(), items[1].As<T2>(), items[2].As<T3>(), items[3].As<T4>(), items[4].As<T5>(), items[5].As<T6>());
+            }
+
+            public bool TryExtract<T1, T2, T3, T4, T5, T6>([StringSyntax(StringSyntaxAttribute.Regex)] string pattern, out T1 first, out T2 second, out T3 third, out T4 fourth, out T5 fifth, out T6 sixth)
+                where T1 : IConvertible
+                where T2 : IConvertible
+                where T3 : IConvertible
+                where T4 : IConvertible
+                where T5 : IConvertible
+                where T6 : IConvertible
+            {
+                ArgumentException.ThrowIfNullOrEmpty(source);
+                ArgumentException.ThrowIfNullOrWhiteSpace(pattern);
+
+                first = default!;
+                second = default!;
+                third = default!;
+                fourth = default!;
+                fifth = default!;
+                sixth = default!;
+
+                var match = Regex.Match(source, pattern);
+                if (!match.Success)
+                    return false;
+
+                var items = match.Groups.Values.Skip(1).Select(g => g.Value).ToArray();
+                if (items.Length != 5)
+                    return false;
+
+                (first, second, third, fourth, fifth, sixth) = (items[0].As<T1>(), items[1].As<T2>(), items[2].As<T3>(), items[3].As<T4>(), items[4].As<T5>(), items[5].As<T6>());
+                return true;
+            }
+
             public string[][] ExtractAllValues([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
             {
                 ArgumentException.ThrowIfNullOrEmpty(source);

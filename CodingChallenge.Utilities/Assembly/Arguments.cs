@@ -98,7 +98,29 @@ namespace CodingChallenge.Utilities.Assembly
             return (Arguments)Activator.CreateInstance(closedGenericType, values)!;
         }
 
+        public static Arguments Parse<T1, T2, T3, T4, T5>(params string[] args)
+            where T1 : IParsable<T1>
+            where T2 : IParsable<T2>
+            where T3 : IParsable<T3>
+            where T4 : IParsable<T4>
+            where T5 : IParsable<T5>
+        {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(args.Length, 5);
 
+            var genericTypes = MethodBase.GetCurrentMethod()!.GetGenericArguments();
+            var values = new object[args.Length];
+
+            DetermineTypeAndValue<T1>(0, args, genericTypes, values);
+            DetermineTypeAndValue<T2>(1, args, genericTypes, values);
+            DetermineTypeAndValue<T3>(2, args, genericTypes, values);
+            DetermineTypeAndValue<T4>(3, args, genericTypes, values);
+            DetermineTypeAndValue<T5>(4, args, genericTypes, values);
+
+            var openGenericType = typeof(Arguments<,,,,>);
+            var closedGenericType = openGenericType.MakeGenericType(genericTypes);
+
+            return (Arguments)Activator.CreateInstance(closedGenericType, values)!;
+        }
 
         private static void DetermineTypeAndValue<T>(int i, string[] args, Type[] types, object[] values) where T : IParsable<T>
         {
@@ -169,5 +191,24 @@ namespace CodingChallenge.Utilities.Assembly
         public required T2 B { get; init; }
         public required T3 C { get; init; }
         public required T4 D { get; init; }
+    }
+
+    public sealed record Arguments<T1, T2, T3, T4, T5> : Arguments
+    {
+        [SetsRequiredMembers]
+        public Arguments(params object[] values) : base(values)
+        {
+            A = (T1)values[0];
+            B = (T2)values[1];
+            C = (T3)values[2];
+            D = (T4)values[3];
+            E = (T5)values[4];
+        }
+
+        public required T1 A { get; init; }
+        public required T2 B { get; init; }
+        public required T3 C { get; init; }
+        public required T4 D { get; init; }
+        public required T5 E { get; init; }
     }
 }

@@ -2,7 +2,7 @@
 {
     public interface IExplicitGraph<TVertex, TEdge> : IImplicitGraph<TVertex, TEdge>
         where TVertex : notnull, IEquatable<TVertex>
-        where TEdge : Edge<TVertex>
+        where TEdge : IEdge<TVertex>
     {
         bool ContainsVertex(TVertex vertex);
 

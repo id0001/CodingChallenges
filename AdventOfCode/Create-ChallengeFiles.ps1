@@ -14,7 +14,7 @@ if(Test-Path -Path $Answers) {
 }
 
 if( -not (Test-Path -Path $projectDir)) {
-    Write-Error "Directory for year $Year not found."
+    Write-Error "Directory for year $Year not found: $projectDir"
     exit
 }
 
@@ -37,10 +37,10 @@ for($day = 1; $day -le $Amount; $day++){
             $template = $template.Replace("{{expected_2}}", "")
         } else {
             $p1 = $answerJson.$day."1" 
-            $template = $template.Replace("{{expected_1}}", ", ""$p1"")")
+            $template = $template.Replace("{{expected_1}}", ", ""$p1""")
 
             $p2 = $answerJson.$day."2"
-            $template = $null -ne $p2 ? $template.Replace("{{expected_2}}", ", ""$p2"")") : $template.Replace("{{expected_2}}", "")
+            $template = $null -ne $p2 ? $template.Replace("{{expected_2}}", ", ""$p2""") : $template.Replace("{{expected_2}}", "")
         }
 
 
