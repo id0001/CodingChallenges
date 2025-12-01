@@ -2,80 +2,110 @@ using CodingChallenge.Utilities;
 using CodingChallenge.Utilities.Attributes;
 using CodingChallenge.Utilities.Extensions;
 using Spectre.Console;
+using System.Collections.Generic;
 
 namespace EverybodyCodes2024.Challenges;
 
 [Challenge(5)]
 public class Quest05
 {
-    [Part(1)]
+    [Part(1, "3222")]
     public string Part1(string input)
     {
-        input = "2 3 4 5\r\n3 4 5 2\r\n4 5 2 3\r\n5 2 3 4";
+        var grid = input.Lines(line => line.SplitBy<int>(" ").ToArray()).ToArray().To2dArray();
+        var dancers = new Dancers(grid);
 
-        var grid = input.Replace(" ", string.Empty).ToGrid((_, c) => c.AsInteger);
+        for (var i = 0; i < 10; i++)
+            dancers.MoveNext();
 
-        var square = new Square(grid);
-
-        var dancer = new Dancer(grid[0, 0], Point2.Zero);
-        for (var r = 0; r < 10; r++)
-        {
-            dancer = square.Progress(dancer);
-
-            AnsiConsole.WriteLine(square.Shout());
-        }
-
-        return square.Shout();
+        return dancers.Shout();
     }
 
-    //[Part(2)]
-    //public string Part2(string input)
-    //{
-    //}
-
-    //[Part(3)]
-    //public string Part3(string input)
-    //{
-    //}
-
-    private record Dancer(int Number, Point2 InitialPosition);
-
-    private class Square
+    [Part(2, "12881059969561")]
+    public string Part2(string input)
     {
-        public readonly List<Dancer>[] _columns;
+        var grid = input.Lines(line => line.SplitBy<int>(" ").ToArray()).ToArray().To2dArray();
+        var dancers = new Dancers(grid);
 
-        public Square(Grid2<int> grid)
+        var dict = new Dictionary<string, int>();
+
+        for (var r = 1; ; r++)
         {
-            _columns = new List<Dancer>[4];
-            for (var x = 0; x < grid.Columns; x++)
+            dancers.MoveNext();
+            var number = dancers.Shout();
+            if (!dict.TryAdd(number, 1))
+                dict[number]++;
+
+            if (dict[number] == 2024)
+                return (number.As<long>() * r).ToString();
+        }
+    }
+
+    [Part(3, "9107100310021002")]
+    public string Part3(string input)
+    {
+        var grid = input.Lines(line => line.SplitBy<int>(" ").ToArray()).ToArray().To2dArray();
+
+        var dancers = new Dancers(grid);
+
+        long max = 0;
+        for (var r = 1; r < 1000 ; r++)
+        {
+            dancers.MoveNext();
+            var number = dancers.Shout().As<long>();
+            max = Math.Max(max, number);
+        }
+
+        return max.ToString();
+    }
+
+    private static int GetInsertIndex(int amount, int length)
+    {
+        bool forward = true;
+        int index = 0;
+        for (var n = 1; n < amount; n++)
+        {
+            index += forward ? 1 : -1;
+
+            if (index < 0)
             {
-                _columns[x] = new List<Dancer>();
-                for (var y = 0; y < grid.Rows; y++)
-                {
-                    _columns[x].Add(new Dancer(grid[y, x], new Point2(x, y)));
-                }
+                index = 0;
+                forward = true;
+            }
+            else if (index >= length)
+            {
+                index = length - 1;
+                forward = false;
             }
         }
 
-        public Dancer Progress(Dancer d)
+        return forward ? index : index + 1;
+    }
+
+    private sealed class Dancers
+    {
+        private int _col = 0;
+        private readonly List<int>[] _columns = [[], [], [], []];
+
+        public Dancers(int[,] input)
         {
-            for (var c = 0; c < _columns.Length; c++)
-            {
-                if (_columns[c].Contains(d))
-                {
-                    _columns[c].Remove(d);
-
-                    c = (c + 1) % 4;
-                    var i = d.Number % _columns[c].Count;
-                    _columns[c].Insert(i, d);
-
-                    return _columns[c][0];
-                }
-            }
-
-            throw new InvalidOperationException();
+            for (var c = 0; c < 4; c++)
+                foreach (var dancer in input.Column(c))
+                    _columns[c].Add(dancer);
         }
 
-        public string Shout() => string.Join(string.Empty, [_columns[0][0].Number, _columns[1][1].Number, _columns[2][0].Number, _columns[3][0].Number]);
+        public void MoveNext()
+        {
+            var d = _columns[_col][0];
+
+            _columns[_col].RemoveAt(0);
+            var _nextCol = (_col + 1).Mod(4);
+
+            var ins = GetInsertIndex(d, _columns[_nextCol].Count);
+            _columns[_nextCol].Insert(ins, d);
+            _col = _nextCol;
+        }
+
+        public string Shout() => string.Join(string.Empty, _columns[0][0].ToString(), _columns[1][0].ToString(), _columns[2][0].ToString(), _columns[3][0].ToString());
     }
 }

@@ -73,7 +73,7 @@ namespace EverybodyCodes.Core
             var request = CreateInputRequest(eventKey, challenge, config);
             var response = await SharedClient.SendAsync(request);
             if (!response.IsSuccessStatusCode)
-                throw new InvalidOperationException("Unable to retrieve input");
+                throw new InvalidOperationException("Unable to retrieve input: " + response.StatusCode);
 
             using var stream = await response.Content.ReadAsStreamAsync();
             return await JsonSerializer.DeserializeAsync<Notes>(stream);
@@ -84,7 +84,7 @@ namespace EverybodyCodes.Core
             var request = CreateAesKeyRequest(eventKey, challenge, config);
             var response = await SharedClient.SendAsync(request);
             if (!response.IsSuccessStatusCode)
-                throw new InvalidOperationException("Unable to retrieve keys");
+                throw new InvalidOperationException("Unable to retrieve keys: " + response.StatusCode);
 
             using var stream = await response.Content.ReadAsStreamAsync();
             return await JsonSerializer.DeserializeAsync<Keys>(stream);
@@ -92,7 +92,7 @@ namespace EverybodyCodes.Core
 
         private static HttpRequestMessage CreateInputRequest(int eventKey, int quest, Config config)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, $"https://everybody-codes.b-cdn.net/assets/{eventKey}/{quest}/input/{config.Seed}.json");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"https://everybody.codes/assets/{eventKey}/{quest}/input/{config.Seed}.json");
             request.Headers.Add("Cookie", $"everybody-codes={config.SessionToken}");
             request.Headers.UserAgent.ParseAdd($"CodingChallenge.Utilities/1.0 (github.com/id0001/CodingChallenges by {config.Email})");
             return request;
