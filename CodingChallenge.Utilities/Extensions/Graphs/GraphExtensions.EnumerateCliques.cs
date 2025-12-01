@@ -5,9 +5,8 @@ namespace CodingChallenge.Utilities.Extensions.Graphs
 {
     public static partial class GraphExtensions
     {
-        extension<TVertex, TEdge>(IExplicitGraph<TVertex, TEdge> source)
+        extension<TVertex>(IExplicitGraph<TVertex> source)
             where TVertex : notnull, IEquatable<TVertex>
-            where TEdge : notnull, Edge<TVertex>
         {
             public List<List<TVertex>> EnumerateCliques()
             {
@@ -21,15 +20,14 @@ namespace CodingChallenge.Utilities.Extensions.Graphs
             }
         }
 
-        private static void BronKerbosch<TVertex, TEdge>(
-            IExplicitGraph<TVertex, TEdge> graph,
+        private static void BronKerbosch<TVertex>(
+            IExplicitGraph<TVertex> graph,
             List<List<TVertex>> cliques,
             ImmutableHashSet<TVertex> r,
             ImmutableHashSet<TVertex> p,
             ImmutableHashSet<TVertex> x
             )
                 where TVertex : notnull, IEquatable<TVertex>
-                where TEdge : notnull, Edge<TVertex>
         {
             if (p.Count == 0 && x.Count == 0)
             {

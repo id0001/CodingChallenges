@@ -1,10 +1,8 @@
 ﻿namespace CodingChallenge.Utilities.Collections.Graphs
 {
-    public interface IImplicitGraph<TVertex, TEdge>
+    public interface IImplicitGraph<TVertex>
         where TVertex : notnull, IEquatable<TVertex>
-        where TEdge : notnull, IEdge<TVertex>
     {
-        IEnumerable<TEdge> OutEdges(TVertex source);
-        IEnumerable<TEdge> InEdges(TVertex target);
+        IEnumerable<(TVertex Source, TVertex Target)> OutEdges(TVertex source);
     }
 }

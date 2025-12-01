@@ -1,14 +1,12 @@
-﻿using CodingChallenge.Utilities.Collections.Graphs;
-using CodingChallenge.Utilities.Collections.Graphs.Algorithms;
+﻿using CodingChallenge.Utilities.Collections.Graphs.Algorithms;
 using CodingChallenge.Utilities.Exceptions;
 
 namespace CodingChallenge.Utilities.Extensions
 {
     public static partial class AStarExtensions
     {
-        extension<TVertex, TEdge>(AStarAlgorithm<TVertex, TEdge> source)
+        extension<TVertex>(AStarAlgorithm<TVertex> source)
             where TVertex : notnull, IEquatable<TVertex>
-            where TEdge : notnull, WeightedEdge<TVertex, int>
         {
             public (TVertex[] Path, int Cost) ShortestPath(TVertex from, TVertex to)
             => ShortestPath(source, from, c => c.Equals(to));

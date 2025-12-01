@@ -1,23 +1,24 @@
 ﻿namespace CodingChallenge.Utilities.Collections.Graphs
 {
-    public class Digraph<TVertex> : IExplicitGraph<TVertex>, IMutableGraph<TVertex>
+    public class WeightedDigraph<TVertex, TWeight> : IWeightedExplicitGraph<TVertex, TWeight>, IExplicitGraph<TVertex>, IWeightedMutableGraph<TVertex, TWeight>
         where TVertex : notnull, IEquatable<TVertex>
+        where TWeight : notnull
     {
-        private readonly Dictionary<TVertex, HashSet<TVertex>> _inEdges = [];
-        private readonly Dictionary<TVertex, HashSet<TVertex>> _outEdges = [];
+        private readonly Dictionary<TVertex, Dictionary<TVertex, TWeight>> _inEdges = [];
+        private readonly Dictionary<TVertex, Dictionary<TVertex, TWeight>> _outEdges = [];
 
         public IReadOnlySet<TVertex> Vertices => _outEdges.Keys.ToHashSet();
 
-        public bool AddEdge(TVertex source, TVertex target)
+        public bool AddEdge(TVertex source, TVertex target, TWeight weight)
         {
             AddVertex(source);
             AddVertex(target);
 
-            if (_outEdges[source].Contains(target))
+            if (_outEdges[source].ContainsKey(target))
                 return false;
 
-            _outEdges[source].Add(target);
-            _inEdges[target].Add(source);
+            _outEdges[source].Add(target, weight);
+            _inEdges[target].Add(source, weight);
             return true;
         }
 
@@ -35,11 +36,11 @@
 
         public int InDegrees(TVertex target) => _inEdges[target].Count;
 
-        public IEnumerable<(TVertex Source, TVertex Target)> InEdges(TVertex target) => _inEdges[target].Select(s => (s, target));
+        public IEnumerable<(TVertex Source, TVertex Target, TWeight Weight)> InEdges(TVertex target) => _inEdges[target].Select(s => (s.Key, target, s.Value));
 
         public int OutDegrees(TVertex source) => _outEdges[source].Count;
 
-        public IEnumerable<(TVertex Source, TVertex Target)> OutEdges(TVertex source) => _outEdges[source].Select(t => (source, t));
+        public IEnumerable<(TVertex Source, TVertex Target, TWeight Weight)> OutEdges(TVertex source) => _outEdges[source].Select(t => (source, t.Key, t.Value));
 
         public bool RemoveEdge(TVertex source, TVertex target)
         {
@@ -56,10 +57,10 @@
             if (!ContainsVertex(vertex))
                 return false;
 
-            foreach(var source in _inEdges[vertex])
+            foreach (var source in _inEdges[vertex].Keys)
                 _outEdges[source].Remove(vertex);
 
-            foreach (var target in _outEdges[vertex])
+            foreach (var target in _outEdges[vertex].Keys)
                 _inEdges[target].Remove(vertex);
 
             _inEdges.Remove(vertex);
@@ -67,5 +68,9 @@
 
             return true;
         }
+
+        IEnumerable<(TVertex Source, TVertex Target)> IExplicitGraph<TVertex>.InEdges(TVertex target) => InEdges(target).Select(edge => (edge.Source, edge.Target));
+
+        IEnumerable<(TVertex Source, TVertex Target)> IImplicitGraph<TVertex>.OutEdges(TVertex source) => OutEdges(source).Select(edge => (edge.Source, edge.Target));
     }
 }

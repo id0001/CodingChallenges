@@ -4,9 +4,8 @@ namespace CodingChallenge.Utilities.Extensions.Graphs
 {
     public static partial class GraphExtensions
     {
-        extension<TVertex, TEdge>(IExplicitGraph<TVertex, TEdge> source)
+        extension<TVertex, TEdge>(IExplicitGraph<TVertex> source)
             where TVertex : notnull, IEquatable<TVertex>
-            where TEdge : notnull, Edge<TVertex>
         {
             public IEnumerable<IEnumerable<TVertex>> ConnectedComponents()
             {

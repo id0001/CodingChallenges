@@ -37,11 +37,11 @@ public class Challenge22
         return (path.Length - 1 + end.Location.X * 5 + 1).ToString();
     }
 
-    private static IEnumerable<Edge<Node>> GetAdjacent(Dictionary<Point2, Node> nodes, Node current)
+    private static IEnumerable<(Node, Node)> GetAdjacent(Dictionary<Point2, Node> nodes, Node current)
     {
         foreach (var neighbor in current.Location.GetNeighbors())
             if (nodes.ContainsKey(neighbor) && current.Size >= nodes[neighbor].Used)
-                yield return new Edge<Node>(current, nodes[neighbor]);
+                yield return (current, nodes[neighbor]);
     }
 
     private Node ParseLine(string line) =>

@@ -33,7 +33,7 @@ public class Challenge17
         return (path.Length - 1).ToString();
     }
 
-    private static IEnumerable<Edge<Node>> GetAdjacent(Node current)
+    private static IEnumerable<(Node, Node)> GetAdjacent(Node current)
     {
         var hash = GetHash(current.Passcode);
 
@@ -42,7 +42,7 @@ public class Challenge17
             if (hash[i] == 'a' || char.IsNumber(hash[i]) || !Bounds.Contains(current.Position + Directions[i]))
                 continue;
 
-            yield return new Edge<Node>(current, new Node(current.Position + Directions[i], current.Passcode + PassDirections[i]));
+            yield return (current, new Node(current.Position + Directions[i], current.Passcode + PassDirections[i]));
         }
     }
 

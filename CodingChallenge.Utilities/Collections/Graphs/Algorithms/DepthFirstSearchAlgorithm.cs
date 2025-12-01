@@ -1,6 +1,9 @@
 ﻿namespace CodingChallenge.Utilities.Collections.Graphs.Algorithms
 {
-    public sealed record DepthFirstSearchAlgorithm<TVertex, TEdge>(Func<TVertex, IEnumerable<TEdge>> OutEdges)
+    public sealed record DepthFirstSearchAlgorithm<TVertex>(Func<TVertex, IEnumerable<(TVertex Source, TVertex Target)>> OutEdges)
+        where TVertex : notnull, IEquatable<TVertex>;
+
+    public sealed record WeightedDepthFirstSearchAlgorithm<TVertex, TWeight>(Func<TVertex, IEnumerable<(TVertex Source, TVertex Target, TWeight Weight)>> OutEdges)
         where TVertex : notnull, IEquatable<TVertex>
-        where TEdge : notnull, Edge<TVertex>;
+        where TWeight : notnull;
 }

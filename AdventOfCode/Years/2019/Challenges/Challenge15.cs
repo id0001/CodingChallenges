@@ -81,12 +81,12 @@ public class Challenge15
         }
     }
 
-    private static IEnumerable<Edge<Point2>> GetAdjacent(SpatialMap2<Node> space, Point2 current)
+    private static IEnumerable<(Point2, Point2)> GetAdjacent(SpatialMap2<Node> space, Point2 current)
     {
         foreach (var neighbor in current.GetNeighbors())
         {
             if (space.ContainsPoint(neighbor) && space[neighbor] != Node.Wall)
-                yield return new Edge<Point2>(current, neighbor);
+                yield return (current, neighbor);
         }
     }
 

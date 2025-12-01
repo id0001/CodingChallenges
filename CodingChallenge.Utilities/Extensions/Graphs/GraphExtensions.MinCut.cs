@@ -4,9 +4,8 @@ namespace CodingChallenge.Utilities.Extensions.Graphs
 {
     public static partial class GraphExtensions
     {
-        extension<TVertex, TEdge>(IExplicitGraph<TVertex, TEdge> source)
+        extension<TVertex>(IExplicitGraph<TVertex> source)
             where TVertex : notnull, IEquatable<TVertex>
-            where TEdge : notnull, Edge<TVertex>
         {
             public (List<TVertex>[] Partitions, List<(TVertex, TVertex)> CutEdges) MinCut()
             {

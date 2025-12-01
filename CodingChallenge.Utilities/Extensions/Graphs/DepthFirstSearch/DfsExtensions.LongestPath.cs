@@ -1,5 +1,4 @@
-﻿using CodingChallenge.Utilities.Collections.Graphs;
-using CodingChallenge.Utilities.Collections.Graphs.Algorithms;
+﻿using CodingChallenge.Utilities.Collections.Graphs.Algorithms;
 using CodingChallenge.Utilities.Collections.Trees;
 using CodingChallenge.Utilities.Exceptions;
 
@@ -7,9 +6,8 @@ namespace CodingChallenge.Utilities.Extensions
 {
     public static partial class DfsExtensions
     {
-        extension<TVertex, TEdge>(DepthFirstSearchAlgorithm<TVertex, TEdge> source)
+        extension<TVertex>(DepthFirstSearchAlgorithm<TVertex> source)
             where TVertex : notnull, IEquatable<TVertex>
-            where TEdge : notnull, Edge<TVertex>
         {
             public TVertex[] LongestPath(TVertex from, TVertex to)
                 => LongestPath(source, from, c => c.Equals(to));

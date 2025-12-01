@@ -18,7 +18,7 @@ public class Challenge20
         var start = maze.First(x => x.Key.Name == "AA").Key;
 
         var (path, cost) = Graph
-            .ImplicitWeighted<Portal, int>(c => GetAdjacent(maze, c))
+            .Implicit<Portal, int>(c => GetAdjacent(maze, c))
             .Dijkstra()
             .ShortestPath(start, c => c.Name == "ZZ");
 
@@ -34,16 +34,16 @@ public class Challenge20
         var start = maze.First(x => x.Key.Name == "AA").Key;
 
         var (path, cost) = Graph
-            .ImplicitWeighted<PortalWithLevel, int>(c => GetAdjacent2(maze, c))
+            .Implicit<PortalWithLevel, int>(c => GetAdjacent2(maze, c))
             .Dijkstra()
             .ShortestPath(new PortalWithLevel(start, 0), c => c.Portal.Name == "ZZ" && c.Level == 0);
 
         return cost.ToString();
     }
 
-    private static IEnumerable<WeightedEdge<Portal, int>> GetAdjacent(ILookup<Portal, WeightedEdge<Portal, int>> edges, Portal current) => edges[current];
+    private static IEnumerable<(Portal, Portal, int)> GetAdjacent(ILookup<Portal, (Portal, Portal, int)> edges, Portal current) => edges[current];
 
-    private static IEnumerable<WeightedEdge<PortalWithLevel, int>> GetAdjacent2(ILookup<Portal, WeightedEdge<Portal, int>> edges, PortalWithLevel current)
+    private static IEnumerable<(PortalWithLevel, PortalWithLevel, int)> GetAdjacent2(ILookup<Portal, (Portal Source, Portal Target, int Weight)> edges, PortalWithLevel current)
     {
         foreach (var edge in edges[current.Portal])
         {
@@ -57,20 +57,20 @@ public class Challenge20
                     continue; // Can't go beyond outer most layer.
 
                 int direction = edge.Target.Type == PortalType.Outer ? 1 : -1;
-                yield return new WeightedEdge<PortalWithLevel, int>(current, new PortalWithLevel(edge.Target, current.Level + direction), edge.Weight);
+                yield return (current, new PortalWithLevel(edge.Target, current.Level + direction), edge.Weight);
             }
             else
             {
                 // Moving on level
-                yield return new WeightedEdge<PortalWithLevel, int>(current, new PortalWithLevel(edge.Target, current.Level), edge.Weight);
+                yield return (current, new PortalWithLevel(edge.Target, current.Level), edge.Weight);
             }
         }
     }
 
-    private static ILookup<Portal, WeightedEdge<Portal, int>> AnalyzeMaze(Grid2<char> grid)
+    private static ILookup<Portal, (Portal, Portal, int)> AnalyzeMaze(Grid2<char> grid)
     {
         var portals = new Dictionary<Point2, Portal>();
-        var edges = new List<WeightedEdge<Portal, int>>();
+        var edges = new List<(Portal Source, Portal Target, int Weight)>();
 
         foreach (var (p, c) in grid)
         {
@@ -94,8 +94,8 @@ public class Challenge20
             if (values.Length < 2)
                 continue;
 
-            edges.Add(new WeightedEdge<Portal, int>(values[0], values[1], 1));
-            edges.Add(new WeightedEdge<Portal, int>(values[1], values[0], 1));
+            edges.Add((values[0], values[1], 1));
+            edges.Add((values[1], values[0], 1));
         }
 
         foreach (var portal in portals.Values)
@@ -107,16 +107,16 @@ public class Challenge20
         return edges.ToLookup(kv => kv.Source);
     }
 
-    private static IEnumerable<Edge<Point2>> GetAdjacentOnGrid(Grid2<char> grid, Point2 current)
+    private static IEnumerable<(Point2 Source, Point2 Target)> GetAdjacentOnGrid(Grid2<char> grid, Point2 current)
     {
         foreach (var neighbor in current.GetNeighbors())
         {
             if (grid[neighbor] != '#' && !char.IsAsciiLetterUpper(grid[neighbor]))
-                yield return new Edge<Point2>(current, neighbor);
+                yield return (current, neighbor);
         }
     }
 
-    private static IEnumerable<WeightedEdge<Portal, int>> FindEdges(Grid2<char> grid, Dictionary<Point2, Portal> portals, Portal from)
+    private static IEnumerable<(Portal, Portal, int)> FindEdges(Grid2<char> grid, Dictionary<Point2, Portal> portals, Portal from)
     {
         Queue<Point2> queue = new([from.Location]);
         Dictionary<Point2, int> visited = new() { [from.Location] = 0 };
@@ -128,7 +128,7 @@ public class Challenge20
 
             if (from.Location != currentVertex && portals.ContainsKey(currentVertex))
             {
-                yield return new WeightedEdge<Portal, int>(from, portals[currentVertex], distance);
+                yield return (from, portals[currentVertex], distance);
                 continue;
             }
 

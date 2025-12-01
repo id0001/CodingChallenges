@@ -10,7 +10,7 @@ public class Challenge07
     [Part(1, "3176")]
     public string Part1(string input)
     {
-        var graph = new DiGraph<Vertex, Edge<Vertex>>();
+        var graph = new Digraph<Vertex>();
         BuildGraph(graph, input.Lines());
         return graph.Vertices.First(v => v.Name == "a").Output.ToString();
     }
@@ -18,7 +18,7 @@ public class Challenge07
     [Part(2, "14710")]
     public string Part2(string input)
     {
-        var graph = new DiGraph<Vertex, Edge<Vertex>>();
+        var graph = new Digraph<Vertex>();
         BuildGraph(graph, input.Lines());
         var aValue = graph.Vertices.First(v => v.Name == "a").Output;
 
@@ -29,14 +29,14 @@ public class Challenge07
         return graph.Vertices.First(v => v.Name == "a").Output.ToString();
     }
 
-    private static void BuildGraph(DiGraph<Vertex, Edge<Vertex>> graph, IEnumerable<string> lines)
+    private static void BuildGraph(Digraph<Vertex> graph, IEnumerable<string> lines)
     {
         var vertices = lines.SelectMany(line => CreateVertices(graph, line)).Distinct().ToDictionary(kv => kv.Name);
         foreach (var edge in lines.SelectMany(line => CreateEdges(vertices, line)))
-            graph.AddEdge(edge);
+            graph.AddEdge(edge.Source, edge.Target);
     }
 
-    private static IEnumerable<Vertex> CreateVertices(DiGraph<Vertex, Edge<Vertex>> graph, string line)
+    private static IEnumerable<Vertex> CreateVertices(Digraph<Vertex> graph, string line)
     {
         var split = line.SplitBy(" ");
 
@@ -74,24 +74,24 @@ public class Challenge07
         });
     }
 
-    private static IEnumerable<Edge<Vertex>> CreateEdges(Dictionary<string, Vertex> vertices, string line)
+    private static IEnumerable<(Vertex Source, Vertex Target)> CreateEdges(Dictionary<string, Vertex> vertices, string line)
     {
         string[] split = line.SplitBy(" ");
 
         if (split.Length == 3)
         {
-            yield return new Edge<Vertex>(vertices[split.First()], vertices[split.Third()]);
+            yield return (vertices[split.First()], vertices[split.Third()]);
             yield break;
         }
 
         if (split.Length == 4)
         {
-            yield return new Edge<Vertex>(vertices[split.Second()], vertices[split.Fourth()]);
+            yield return (vertices[split.Second()], vertices[split.Fourth()]);
             yield break;
         }
 
-        yield return new Edge<Vertex>(vertices[split.First()], vertices[split.Fifth()]);
-        yield return new Edge<Vertex>(vertices[split.Third()], vertices[split.Fifth()]);
+        yield return (vertices[split.First()], vertices[split.Fifth()]);
+        yield return (vertices[split.Third()], vertices[split.Fifth()]);
     }
 
     private sealed class Vertex : IEquatable<Vertex>

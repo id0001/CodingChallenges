@@ -65,17 +65,17 @@ public class Challenge11
         return (path.Length - 1).ToString();
     }
 
-    private static IEnumerable<Edge<State>> GetAjacent(State current)
+    private static IEnumerable<(State, State)> GetAjacent(State current)
     {
         // Go up
         if (current.CurrentLevel < 3)
             foreach (var next in current.GetNext(1))
-                yield return new Edge<State>(current, next);
+                yield return (current, next);
 
         // Go down
         if (current.CurrentLevel > 0)
             foreach (var next in current.GetNext(-1))
-                yield return new Edge<State>(current,next);
+                yield return (current,next);
     }
 
     private sealed record State(int CurrentLevel, ImmutableBitVector32 Bits, int PairCount)

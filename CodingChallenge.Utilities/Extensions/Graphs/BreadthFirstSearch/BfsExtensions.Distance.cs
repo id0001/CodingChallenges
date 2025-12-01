@@ -1,13 +1,11 @@
-﻿using CodingChallenge.Utilities.Collections.Graphs;
-using CodingChallenge.Utilities.Collections.Graphs.Algorithms;
+﻿using CodingChallenge.Utilities.Collections.Graphs.Algorithms;
 
 namespace CodingChallenge.Utilities.Extensions
 {
     public static partial class BfsExtensions
     {
-        extension<TVertex, TEdge>(BreadthFirstSearchAlgorithm<TVertex, TEdge> source)
+        extension<TVertex>(BreadthFirstSearchAlgorithm<TVertex> source)
             where TVertex : notnull, IEquatable<TVertex>
-            where TEdge : notnull, Edge<TVertex>
         {
             public int Distance(TVertex from, TVertex to)
                 => Distance(source, from, c => c.Equals(to));

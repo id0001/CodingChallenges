@@ -20,7 +20,7 @@ public class Challenge18
         var maze = AnalyzeMaze(grid, center);
 
         var (path, cost) = Graph
-            .ImplicitWeighted<DroneState1, int>(c => GetAjacentPart1(grid, maze, c))
+            .Implicit<DroneState1, int>(c => GetAjacentPart1(grid, maze, c))
             .Dijkstra()
             .ShortestPath(new DroneState1(center, 0), c => IsFinished(c.ObtainedKeys));
 
@@ -49,26 +49,26 @@ public class Challenge18
 
         var start = new DroneState2(new ImmutableValueArray<Point2>(starts), 0);
         var (path, cost) = Graph
-            .ImplicitWeighted<DroneState2, int>(c => GetAjacentPart2(grid, maze, c))
+            .Implicit<DroneState2, int>(c => GetAjacentPart2(grid, maze, c))
             .Dijkstra()
             .ShortestPath(start, c => IsFinished(c.ObtainedKeys));
 
         return cost.ToString();
     }
 
-    private static IEnumerable<WeightedEdge<DroneState1, int>> GetAjacentPart1(Grid2<char> grid, ILookup<Point2, MazeEdge> edges, DroneState1 current)
+    private static IEnumerable<(DroneState1, DroneState1, int)> GetAjacentPart1(Grid2<char> grid, ILookup<Point2, MazeEdge> edges, DroneState1 current)
     {
         foreach (var edge in edges[current.Position])
         {
             if (HasRequiredKeys(current.ObtainedKeys, edge.KeysRequired))
             {
                 var keys = current.ObtainedKeys.SetBit(grid[edge.To] - 'a', true);
-                yield return new WeightedEdge<DroneState1, int>(current, new DroneState1(edge.To, keys), edge.Distance);
+                yield return (current, new DroneState1(edge.To, keys), edge.Distance);
             }
         }
     }
 
-    private static IEnumerable<WeightedEdge<DroneState2, int>> GetAjacentPart2(Grid2<char> grid, ILookup<Point2, MazeEdge> edges, DroneState2 current)
+    private static IEnumerable<(DroneState2, DroneState2, int)> GetAjacentPart2(Grid2<char> grid, ILookup<Point2, MazeEdge> edges, DroneState2 current)
     {
         for (var i = 0; i < 4; i++)
         {
@@ -77,7 +77,7 @@ public class Challenge18
                 if (HasRequiredKeys(current.ObtainedKeys, edge.KeysRequired))
                 {
                     var keys = current.ObtainedKeys.SetBit(grid[edge.To] - 'a', true);
-                    yield return new WeightedEdge<DroneState2, int>(current, new DroneState2(current.Positions.SetItem(i, edge.To), keys), edge.Distance);
+                    yield return (current, new DroneState2(current.Positions.SetItem(i, edge.To), keys), edge.Distance);
                 }
             }
         }
@@ -132,12 +132,12 @@ public class Challenge18
         }
     }
 
-    private static IEnumerable<Edge<Point2>> GetAdjacentOnGrid(Grid2<char> grid, Point2 current)
+    private static IEnumerable<(Point2 Source, Point2 Target)> GetAdjacentOnGrid(Grid2<char> grid, Point2 current)
     {
         foreach (var neighbor in current.GetNeighbors())
         {
             if (grid[neighbor] != '#')
-                yield return new Edge<Point2>(current, neighbor);
+                yield return (current, neighbor);
         }
     }
 

@@ -1,7 +1,8 @@
 ﻿namespace CodingChallenge.Utilities.Collections.Graphs
 {
-    public interface IExplicitGraph<TVertex> : IImplicitGraph<TVertex>
+    public interface IWeightedExplicitGraph<TVertex, TWeight> : IWeightedImplicitGraph<TVertex, TWeight>
         where TVertex : notnull, IEquatable<TVertex>
+        where TWeight : notnull
     {
         IReadOnlySet<TVertex> Vertices { get; }
 
@@ -11,6 +12,6 @@
 
         int InDegrees(TVertex target);
 
-        IEnumerable<(TVertex Source, TVertex Target)> InEdges(TVertex target);
+        IEnumerable<(TVertex Source, TVertex Target, TWeight Weight)> InEdges(TVertex target);
     }
 }

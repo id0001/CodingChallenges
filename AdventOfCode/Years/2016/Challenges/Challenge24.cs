@@ -19,7 +19,7 @@ public class Challenge24
         var visited = new BitArray(pois.Length);
         visited.Set(0, true);
 
-        var (_, cost) = Graph.ImplicitWeighted<Node, int>(n => GetAjacent(graph, n)).Dijkstra().ShortestPath(new Node(0, visited), n => n.Visited.HasAllSet());
+        var (_, cost) = Graph.Implicit<Node, int>(n => GetAjacent(graph, n)).Dijkstra().ShortestPath(new Node(0, visited), n => n.Visited.HasAllSet());
         return cost.ToString();
     }
 
@@ -32,13 +32,13 @@ public class Challenge24
 
         var visited = new BitArray(pois.Length);
 
-        var (_, cost) = Graph.ImplicitWeighted<Node, int>(n => GetAjacent(graph, n)).Dijkstra().ShortestPath(new Node(0, visited), n => n.Visited.HasAllSet());
+        var (_, cost) = Graph.Implicit<Node, int>(n => GetAjacent(graph, n)).Dijkstra().ShortestPath(new Node(0, visited), n => n.Visited.HasAllSet());
         return cost.ToString();
     }
 
-    private static DiGraph<int, WeightedEdge<int, int>> CreateGraph(Grid2<char> grid, Point2[] pois)
+    private static WeightedDigraph<int, int> CreateGraph(Grid2<char> grid, Point2[] pois)
     {
-        var digraph = new DiGraph<int, WeightedEdge<int, int>>();
+        var digraph = new WeightedDigraph<int, int>();
         foreach (var poi in pois)
             digraph.AddVertex(grid[poi].As<int>());
 
@@ -51,21 +51,21 @@ public class Challenge24
 
             var a = (int)char.GetNumericValue(grid[pair[0]]);
             var b = (int)char.GetNumericValue(grid[pair[1]]);
-            digraph.AddEdge(new WeightedEdge<int, int>(a, b, distance));
-            digraph.AddEdge(new WeightedEdge<int, int>(b, a, distance));
+            digraph.AddEdge(a, b, distance);
+            digraph.AddEdge(b, a, distance);
         }
 
         return digraph;
     }
 
-    private static IEnumerable<Edge<Point2>> GetAdjacentSimple(Grid2<char> grid, Point2 current)
+    private static IEnumerable<(Point2, Point2)> GetAdjacentSimple(Grid2<char> grid, Point2 current)
     {
         foreach (var neighbor in current.GetNeighbors())
             if (grid.Bounds.Contains(neighbor) && grid[neighbor] != '#')
-                yield return new Edge<Point2>(current, neighbor);
+                yield return (current, neighbor);
     }
 
-    private static IEnumerable<WeightedEdge<Node, int>> GetAjacent(DiGraph<int, WeightedEdge<int, int>> pointsOfInterest, Node current)
+    private static IEnumerable<(Node, Node, int)> GetAjacent(WeightedDigraph<int, int> pointsOfInterest, Node current)
     {
         foreach (var n in pointsOfInterest.OutEdges(current.Id))
         {
@@ -80,7 +80,7 @@ public class Challenge24
 
             var visited = new BitArray(current.Visited);
             visited.Set(n.Target, true);
-            yield return new WeightedEdge<Node, int>(current, new Node(n.Target, visited), n.Weight);
+            yield return (current, new Node(n.Target, visited), n.Weight);
         }
     }
 

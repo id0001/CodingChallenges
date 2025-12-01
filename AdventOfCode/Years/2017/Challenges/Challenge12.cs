@@ -10,14 +10,14 @@ public class Challenge12
     [Part(1, "175")]
     public string Part1(string input)
     {
-        var graph = new DiGraph<int, Edge<int>>();
+        var graph = new Digraph<int>();
         foreach (var (p, c) in input.Lines(line => line.Extract<int, string>(@"(\d+) <-> (.+)")))
         {
             var children = c.SplitBy<int>(",");
-            foreach(var child in children)
+            foreach (var child in children)
             {
-                graph.AddEdge(new Edge<int>(p, child));
-                graph.AddEdge(new Edge<int>(child, p));
+                graph.AddEdge(p, child);
+                graph.AddEdge(child, p);
             }
         }
 

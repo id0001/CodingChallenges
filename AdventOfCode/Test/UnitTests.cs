@@ -22,12 +22,12 @@ namespace AdventOfCode.Test
             Assert.Equal(3, paths.Count);
         }
 
-        private IEnumerable<Edge<Point2>> GetAdjacent(Grid2<char> grid, Point2 current)
+        private IEnumerable<(Point2, Point2)> GetAdjacent(Grid2<char> grid, Point2 current)
         {
             foreach (var neighbor in current.GetNeighbors())
             {
                 if (grid[neighbor] != '#')
-                    yield return new Edge<Point2>(current, neighbor);
+                    yield return (current, neighbor);
             }
         }
     }
