@@ -18,7 +18,7 @@ namespace CodingChallenge.Utilities.Extensions.Graphs
                     foreach (var (v, _) in cluster)
                         candidates.Remove(v);
 
-                    yield return cluster.Select(x => x.Value);
+                    yield return cluster.Select(x => x.Vertex);
                 }
             }
         }

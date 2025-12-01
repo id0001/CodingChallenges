@@ -7,7 +7,7 @@ namespace CodingChallenge.Utilities.Extensions
         extension<TVertex>(BreadthFirstSearchAlgorithm<TVertex> source)
             where TVertex : notnull, IEquatable<TVertex>
         {
-            public IEnumerable<(TVertex Value, int Distance)> FloodFill(TVertex start, int maxSteps = int.MaxValue)
+            public IEnumerable<(TVertex Vertex, int Distance)> FloodFill(TVertex start, int maxSteps = int.MaxValue)
             {
                 ArgumentNullException.ThrowIfNull(source);
 
@@ -19,7 +19,7 @@ namespace CodingChallenge.Utilities.Extensions
                     var currentVertex = queue.Dequeue();
                     int distance = visited[currentVertex];
 
-                    yield return (Value: currentVertex, Distance: distance);
+                    yield return (Vertex: currentVertex, Distance: distance);
                     if (distance == maxSteps)
                         continue;
 
