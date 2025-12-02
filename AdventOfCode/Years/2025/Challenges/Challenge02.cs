@@ -10,7 +10,7 @@ public class Challenge02
     public string Part1(string input) => input
         .SplitBy(",")
         .SelectMany(range => range.SplitBy<long>("-")
-        .Transform(r => GetInvalidNumbersInRange(r.First(), r.Second())))
+        .Transform(r => Range(r.First(), r.Second()).Where(i => IsInvalid(i.ToString(), 2))))
         .Sum()
         .ToString();
 
@@ -18,47 +18,42 @@ public class Challenge02
     public string Part2(string input) => input
         .SplitBy(",")
         .SelectMany(range => range.SplitBy<long>("-")
-        .Transform(r => GetInvalidNumbersInRange2(r.First(), r.Second())))
+        .Transform(r => Range(r.First(), r.Second()).Where(i => IsInvalid(i.ToString()))))
         .Sum()
         .ToString();
 
-    private static IEnumerable<long> GetInvalidNumbersInRange(long low, long high)
+    private static IEnumerable<long> Range(long low, long high)
     {
         for (var i = low; i <= high; i++)
-        {
-            var s = i.ToString();
-            if (s.Length % 2 != 0)
-                continue;
-
-            var len = s.Length / 2;
-            if (s[0..len] == s[len..])
-                yield return i;
-        }
+            yield return i;
     }
 
-    private static IEnumerable<long> GetInvalidNumbersInRange2(long low, long high)
+    private static bool IsInvalid(string number)
     {
-        for (var i = low; i <= high; i++)
+        for (var i = 2; i <=  number.Length; i++)
         {
-            if (IsInvalid(i.ToString(), 2))
-                yield return i;
+            if (IsInvalid(number, i))
+                return true;
         }
+
+        return false;
     }
 
-    private static bool IsInvalid(string number, int div)
+    private static bool IsInvalid(string number, int repCount)
     {
-        if (div > number.Length)
+        if (number.Length % repCount != 0)
             return false;
 
-        if (number.Length % div != 0)
-            return IsInvalid(number, div + 1);
+        if (repCount > number.Length)
+            return false;
 
-        int len = number.Length / div;
-        string pattern = number[0..len];
-        for (int i = len; i < number.Length; i += len)
+        int patternLength = number.Length / repCount;
+        string pattern = number[0..patternLength];
+
+        for (var i = patternLength; i < number.Length; i += patternLength)
         {
-            if (number[i..(i + len)] != pattern)
-                return IsInvalid(number, div + 1);
+            if (number[i..(i + patternLength)] != pattern)
+                return false;
         }
 
         return true;
