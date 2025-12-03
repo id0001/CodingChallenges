@@ -8,40 +8,35 @@ public class Challenge03
 {
     [Part(1, "17229")]
     public string Part1(string input) => input
-        .Lines(line => FindLargest([.. line.Select(c => (long)c.AsInteger)], 0, 0, 2))
+        .Lines(line => FindLargest([.. line.Select(c => (long)c.AsInteger)], 2))
         .Sum()
         .ToString();
 
 
     [Part(2, "170520923035051")]
     public string Part2(string input) => input
-        .Lines(line => FindLargest([.. line.Select(c => (long)c.AsInteger)], 0, 0, 12))
+        .Lines(line => FindLargest([.. line.Select(c => (long)c.AsInteger)], 12))
         .Sum()
         .ToString();
 
-    private static long FindLargest(long[] source, int si, int ri, int length)
+    private static long FindLargest(long[] source, int length)
     {
-        if (ri >= length)
-            return 0; // last digit found
-
-        int maxLength = source.Length - (length - 1 - ri);
-        if (si >= maxLength)
-            return -1; // Incorrect result
-
-        for (var d = 9; d > 0; d--)
+        long result = 0;
+        int nextIndex = 0;
+        for (var ri = 0; ri < length; ri++)
         {
-            for (var i = si; i < maxLength; i++)
-            {
-                if (source[i] == d)
-                {
-                    var value = source[i] * (long)Math.Pow(10, (length - 1) - ri);
-                    var result = FindLargest(source, i + 1, ri + 1, length);
-                    if (result >= 0)
-                        return value + result; // Largest value found
-                }
-            }
+            // Get the position of the largest digit in the array from nextIndex still leaving space for the next digits.
+            nextIndex = source
+                .Index()
+                .Skip(nextIndex)
+                .Where(x => x.Index + (length - 1 - ri) < source.Length)
+                .MaxBy(x => x.Item)
+                .Index;
+
+            result += (long)Math.Pow(10, length - 1 - ri) * source[nextIndex];
+            nextIndex++;
         }
 
-        return -1; // Incorrect result
+        return result;
     }
 }
