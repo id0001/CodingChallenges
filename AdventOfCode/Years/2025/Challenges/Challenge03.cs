@@ -24,12 +24,13 @@ public class Challenge03
         if (ri >= length)
             return 0; // last digit found
 
-        if (si > source.Length)
+        int maxLength = source.Length - (length - 1 - ri);
+        if (si >= maxLength)
             return -1; // Incorrect result
 
         for (var d = 9; d > 0; d--)
         {
-            for (var i = si; i < source.Length - ((length - 1) - ri); i++)
+            for (var i = si; i < maxLength; i++)
             {
                 if (source[i] == d)
                 {
