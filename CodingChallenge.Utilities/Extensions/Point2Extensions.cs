@@ -5,6 +5,8 @@
         extension(Point2 source)
         {
             public Vector2 ToVector2() => new Vector2(source.X, source.Y);
+
+            public int ToIndex(int width) => source.Y * width + source.X;
         }
     }
 }

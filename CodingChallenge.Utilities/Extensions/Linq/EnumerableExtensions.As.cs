@@ -31,5 +31,17 @@
                 return new string(source);
             }
         }
+
+        extension(IEnumerable<byte> source)
+        {
+            public IEnumerable<bool> AsBinary()
+            {
+                foreach(var b in source)
+                {
+                    for (var i = 0; i < 8; i++)
+                        yield return ((b >> 7 - i) & 1) == 1;
+                }
+            }
+        }
     }
 }

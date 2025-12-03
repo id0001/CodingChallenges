@@ -49,5 +49,10 @@ namespace CodingChallenge.Utilities.Extensions
                 foreach (var n in EnumerateDigits(number / numberBase, numberBase).Concat(EnumerateDigits(number % numberBase, numberBase)))
                     yield return n;
         }
+
+        extension(int source)
+        {
+            public Point2 ToPoint2(int width) => new Point2(source % width, source / width);
+        }
     }
 }
