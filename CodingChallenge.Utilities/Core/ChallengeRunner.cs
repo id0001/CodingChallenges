@@ -34,7 +34,7 @@ namespace CodingChallenge.Utilities.Core
                 var input = await _inputProvider.GetForPartAsync(challenge, attr.Part);
                 var (result, duration) = Measure(() => CallMethod(instance, method, input));
 
-                var benchmark = Benchmark(() => CallMethod(instance, method, input), 100, TimeSpan.FromSeconds(120));
+                var benchmark = Benchmark(() => CallMethod(instance, method, input), 100, TimeSpan.FromMinutes(60));
                 yield return new BenchmarkResult(challenge, attr.Part, result, attr.Expected, duration, benchmark);
             }
         }

@@ -49,7 +49,6 @@ namespace CodingChallenge.Utilities.Core
         {
             var table = new Table().Expand();
             table.Title = new TableTitle($"Part {result.Part}");
-            table.AddColumn(new TableColumn("Input"));
             table.AddColumn(new TableColumn("Time (first run)"));
             table.AddColumn(new TableColumn("Benchmark (avg over 100 runs)"));
             table.AddColumn(new TableColumn("Result"));
