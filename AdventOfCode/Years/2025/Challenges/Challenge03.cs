@@ -26,13 +26,7 @@ public class Challenge03
         for (var ri = 0; ri < length; ri++)
         {
             // Get the position of the largest digit in the array from nextIndex still leaving space for the next digits.
-            nextIndex = source
-                .Index()
-                .Skip(nextIndex)
-                .Where(x => x.Index + (length - 1 - ri) < source.Length)
-                .MaxBy(x => x.Item)
-                .Index;
-
+            nextIndex += source[nextIndex..(source.Length - (length - 1 - ri))].Index().MaxBy(x => x.Item).Index;
             result += (long)Math.Pow(10, length - 1 - ri) * source[nextIndex];
             nextIndex++;
         }
