@@ -1,6 +1,6 @@
 ﻿using CodingChallenge.Utilities.Collections.Graphs;
 
-namespace CodingChallenge.Utilities.Extensions.Graphs
+namespace CodingChallenge.Utilities.Extensions
 {
     public static partial class GraphExtensions
     {

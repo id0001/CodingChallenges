@@ -59,6 +59,14 @@
 
         public bool ContainsVertex(TVertex vertex) => _adjacent.ContainsKey(vertex);
 
+        public bool ContainsEdge(TVertex source, TVertex target)
+        {
+            if (!ContainsVertex(source) || !ContainsVertex(target))
+                return false;
+
+            return _adjacent[source].Contains(target);
+        }
+
         public int InDegrees(TVertex target) => _adjacent[target].Count;
 
         public IEnumerable<(TVertex Source, TVertex Target)> InEdges(TVertex target) => _adjacent[target].Select(source => (source, target));

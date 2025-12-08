@@ -1,7 +1,7 @@
 ﻿using CodingChallenge.Utilities.Collections.Graphs;
 using System.Collections.Immutable;
 
-namespace CodingChallenge.Utilities.Extensions.Graphs
+namespace CodingChallenge.Utilities.Extensions
 {
     public static partial class GraphExtensions
     {

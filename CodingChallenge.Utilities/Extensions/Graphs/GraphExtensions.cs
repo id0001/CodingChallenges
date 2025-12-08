@@ -3,7 +3,7 @@ using CodingChallenge.Utilities.Collections.Graphs.Algorithms;
 
 namespace CodingChallenge.Utilities.Extensions
 {
-    public static class GraphExtensions
+    public static partial class GraphExtensions
     {
         extension<TVertex>(IWeightedImplicitGraph<TVertex, int> source)
             where TVertex : notnull, IEquatable<TVertex>

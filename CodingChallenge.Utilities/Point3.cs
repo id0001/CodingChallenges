@@ -42,8 +42,17 @@
             }
         }
 
-        public static int ManhattanDistance(Point3 p0, Point3 p1)
-            => System.Math.Abs(p1.X - p0.X) + System.Math.Abs(p1.Y - p0.Y) + System.Math.Abs(p1.Z - p0.Z);
+        public static int ManhattanDistance(Point3 a, Point3 b)
+            => Math.Abs(b.X - a.X) + Math.Abs(b.Y - a.Y) + Math.Abs(b.Z - a.Z);
+
+        public static long DistanceSquared(Point3 a, Point3 b)
+        {
+            long dx = b.X - a.X;
+            long dy = b.Y - a.Y;
+            long dz = b.Z - a.Z;
+
+            return dx * dx + dy * dy + dz * dz;
+        }
 
         #region Operators
 

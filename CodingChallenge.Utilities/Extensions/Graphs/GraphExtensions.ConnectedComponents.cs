@@ -1,10 +1,10 @@
 ﻿using CodingChallenge.Utilities.Collections.Graphs;
 
-namespace CodingChallenge.Utilities.Extensions.Graphs
+namespace CodingChallenge.Utilities.Extensions
 {
     public static partial class GraphExtensions
     {
-        extension<TVertex, TEdge>(IExplicitGraph<TVertex> source)
+        extension<TVertex>(IExplicitGraph<TVertex> source)
             where TVertex : notnull, IEquatable<TVertex>
         {
             public IEnumerable<IEnumerable<TVertex>> ConnectedComponents()
