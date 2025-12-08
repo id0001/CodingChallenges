@@ -14,10 +14,9 @@ public class Challenge08
 
         var circuits = new List<List<Point3>>();
         foreach (var v in vertices)
-            circuits.Add(new List<Point3>() { v });
+            circuits.Add([v]);
 
-        int count = 0;
-        foreach (var (a,b, _) in EnumerateDistances(vertices).OrderBy(e => e.Distance))
+        foreach (var (a,b, _) in EnumerateDistances(vertices).OrderBy(e => e.Distance).Take(1000))
         {
             List<Point3> c1 = null!;
             List<Point3> c2 = null!;
@@ -36,10 +35,6 @@ public class Challenge08
                 c1.AddRange(c2);
                 circuits.Remove(c2);
             }
-
-            count++;
-            if (count == 1000)
-                break;
         }
 
         return circuits.OrderByDescending(x => x.Count).Take(3).Select(x => x.Count).Product().ToString();
@@ -71,7 +66,7 @@ public class Challenge08
             if (c1 != c2)
             {
                 if (circuits.Count == 2)
-                    return ((long)a.X * (long)b.X).ToString();
+                    return (a.X * (long)b.X).ToString();
 
                 c1.AddRange(c2);
                 circuits.Remove(c2);
