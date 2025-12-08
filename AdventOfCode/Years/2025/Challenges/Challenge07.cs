@@ -31,40 +31,39 @@ public class Challenge07
         var start = grid.First(x => x.Value == 'S').Key;
         var digraph = CreateGraph(grid, start);
 
-        var paths = CountPaths(digraph, start, grid.Rows - 2);
+        var paths = CountPaths(digraph, start, grid.Rows - 1);
 
         return paths.ToString();
     }
 
     private static Digraph<Point2> CreateGraph(Grid2<char> grid, Point2 start)
     {
-        var vertices = new HashSet<Point2> { start };
+        var edges = new HashSet<(Point2, Point2)> { (start, start.Down) };
+        var graph = new Digraph<Point2>();
 
-        var digraph = new Digraph<Point2>();
-
-        for (var y = 0; y < grid.Rows - 1; y++)
+        for (var y = 0; y < grid.Rows - 2; y++)
         {
-            var queue = new Queue<Point2>(vertices);
-            vertices.Clear();
-            while (queue.Count > 0)
+            var nextEdges = new HashSet<(Point2, Point2)>();
+            foreach (var (p,v) in edges)
             {
-                var cur = queue.Dequeue();
-                if (grid[cur.Down] == '^')
+                if (grid[v] == '^')
                 {
-                    digraph.AddEdge(cur, cur.Down.Left);
-                    digraph.AddEdge(cur, cur.Down.Right);
-                    vertices.Add(cur.Down.Left);
-                    vertices.Add(cur.Down.Right);
+                    graph.AddEdge(p, v);
+                    nextEdges.Add((v, v.Left.Down));
+                    nextEdges.Add((v, v.Right.Down));
+                    continue;
                 }
-                else
-                {
-                    digraph.AddEdge(cur, cur.Down);
-                    vertices.Add(cur.Down);
-                }
+
+                nextEdges.Add((p,v.Down));
             }
+
+            edges = nextEdges;
         }
 
-        return digraph;
+        foreach (var (p, v) in edges)
+            graph.AddEdge(p, v);
+
+        return graph;
     }
 
     private static long CountPaths(Digraph<Point2> graph, Point2 start, int endY)
