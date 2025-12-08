@@ -1,5 +1,6 @@
 using CodingChallenge.Utilities;
 using CodingChallenge.Utilities.Attributes;
+using CodingChallenge.Utilities.Collections;
 using CodingChallenge.Utilities.Extensions;
 
 namespace AdventOfCode2025.Challenges;
@@ -12,32 +13,11 @@ public class Challenge08
     {
         var vertices = input.Lines(line => line.SplitBy<int>(",").Transform(v => new Point3(v.First(), v.Second(), v.Third()))).ToList();
 
-        var circuits = new List<List<Point3>>();
-        foreach (var v in vertices)
-            circuits.Add([v]);
+        var dsu = new UnionFind<Point3>(vertices);
+        foreach (var (a, b, _) in EnumerateDistances(vertices).OrderBy(e => e.Distance).Take(1000))
+            dsu.Union(a, b);
 
-        foreach (var (a,b, _) in EnumerateDistances(vertices).OrderBy(e => e.Distance).Take(1000))
-        {
-            List<Point3> c1 = null!;
-            List<Point3> c2 = null!;
-            
-            foreach(var circuit in circuits)
-            {
-                if (circuit.Contains(a))
-                    c1 = circuit;
-
-                if (circuit.Contains(b))
-                    c2 = circuit;
-            }
-
-            if(c1 != c2)
-            {
-                c1.AddRange(c2);
-                circuits.Remove(c2);
-            }
-        }
-
-        return circuits.OrderByDescending(x => x.Count).Take(3).Select(x => x.Count).Product().ToString();
+        return dsu.GetAllSets().OrderByDescending(x => x.Count).Take(3).Select(x => x.Count).Product().ToString();
     }
 
     [Part(2, "8663467782")]
@@ -45,32 +25,18 @@ public class Challenge08
     {
         var vertices = input.Lines(line => line.SplitBy<int>(",").Transform(v => new Point3(v.First(), v.Second(), v.Third()))).ToList();
 
-        var circuits = new List<List<Point3>>();
-        foreach (var v in vertices)
-            circuits.Add([v]);
-
+        int vertexCount = vertices.Count;
+        var dsu = new UnionFind<Point3>(vertices);
         foreach (var (a, b, _) in EnumerateDistances(vertices).OrderBy(e => e.Distance))
         {
-            List<Point3> c1 = null!;
-            List<Point3> c2 = null!;
-
-            foreach (var circuit in circuits)
+            if (!dsu.AreConnected(a, b))
             {
-                if (circuit.Contains(a))
-                    c1 = circuit;
-
-                if (circuit.Contains(b))
-                    c2 = circuit;
+                dsu.Union(a, b);
+                vertexCount--;
             }
 
-            if (c1 != c2)
-            {
-                if (circuits.Count == 2)
-                    return (a.X * (long)b.X).ToString();
-
-                c1.AddRange(c2);
-                circuits.Remove(c2);
-            }
+            if (vertexCount == 1)
+                return (a.X * (long)b.X).ToString();
         }
 
         throw new InvalidOperationException();
