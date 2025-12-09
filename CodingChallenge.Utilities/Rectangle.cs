@@ -16,6 +16,10 @@
 
         public int Bottom => Y + Height; // Exclusive
 
+        public int Area => Math.Abs(Width * Height);
+
+        public long LongArea => Math.Abs((long)Width * Height);
+
         public override string ToString() => $"[X: {X}, Y: {Y}, Width: {Width}, Height: {Height}]";
 
         public bool Contains(Point2 p)
