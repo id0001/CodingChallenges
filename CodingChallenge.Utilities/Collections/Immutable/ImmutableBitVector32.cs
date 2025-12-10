@@ -19,6 +19,16 @@ namespace CodingChallenge.Utilities.Collections.Immutable
 
         public IReadOnlyList<BitVector32.Section> Sections => _sections;
 
+        public static ImmutableBitVector32 Create(int sectionBitSize, int count)
+        {
+            var vector = new ImmutableBitVector32();
+            var size = (short)((1 << sectionBitSize) - 1);
+            for (var i = 0; i < count; i++)
+                vector = vector.AddSection(size);
+
+            return vector;
+        }
+
         public ImmutableBitVector32 AddSection(short maxValue)
         {
             if (_sections.Count == 0)

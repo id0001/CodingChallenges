@@ -38,7 +38,7 @@ namespace CodingChallenge.Utilities.Collections.Immutable
         public override int GetHashCode()
         {
             var hc = new HashCode();
-            foreach(var v in _values)
+            foreach (var v in _values)
                 hc.Add(v.GetHashCode());
 
             return hc.ToHashCode();
@@ -48,6 +48,8 @@ namespace CodingChallenge.Utilities.Collections.Immutable
 
         public static implicit operator ImmutableValueArray<T>(ImmutableArray<T> value) => new ImmutableValueArray<T>(value);
         public static implicit operator ImmutableArray<T>(ImmutableValueArray<T> value) => value._values;
+        public static bool operator ==(ImmutableValueArray<T> a, ImmutableValueArray<T> b) => a.Equals(b);
+        public static bool operator !=(ImmutableValueArray<T> a, ImmutableValueArray<T> b) => !a.Equals(b);
 
         private sealed class DebugView(ImmutableValueArray<T> array)
         {
