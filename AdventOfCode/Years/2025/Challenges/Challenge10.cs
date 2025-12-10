@@ -55,26 +55,27 @@ public class Challenge10
          * a  + b  + c  + d  + e  + f  = s (minimize s)
         */
         using var ctx = new Context();
+        var solver = ctx.MkSolver();
 
         int result = 0;
         foreach (var line in input.Lines())
         {
+            solver.Reset();
+
             var split = line.SplitBy(" ");
             var joltage = split[^1][1..^1].SplitBy<int>(",").ToArray();
             var schematics = split[1..^1].Select(s => s[1..^1].SplitBy<int>(",").ToArray()).ToList();
 
-            Solver s = ctx.MkSolver();
-
             // These are the times a specific index is multiplied
-            IntExpr[] xExpressions = new IntExpr[schematics.Count];
+            var xVar = new IntExpr[schematics.Count];
             for (var i = 0; i < schematics.Count; i++)
             {
-                xExpressions[i] = ctx.MkIntConst("x" + i);
-                s.Assert(ctx.MkGe(xExpressions[i], ctx.MkInt(0)));
+                xVar[i] = ctx.MkIntConst("x" + i);
+                solver.Assert(ctx.MkGe(xVar[i], ctx.MkInt(0)));
             }
 
             // All the possible additions per index
-            int[,] groups = new int[schematics.Count, joltage.Length];
+            var groups = new int[schematics.Count, joltage.Length];
             for (var y = 0; y < schematics.Count; y++)
             {
                 for (var x = 0; x < schematics[y].Length; x++)
@@ -86,27 +87,26 @@ public class Challenge10
                 // Create the equasion for each index and assert that its equal to the target
                 ArithExpr sum = ctx.MkInt(0);
                 for (int j = 0; j < schematics.Count; j++)
-                    sum = ctx.MkAdd(sum, ctx.MkMul(ctx.MkInt(groups[j, i]), xExpressions[j]));
+                    sum = ctx.MkAdd(sum, ctx.MkMul(ctx.MkInt(groups[j, i]), xVar[j]));
 
-                s.Assert(ctx.MkEq(sum, ctx.MkInt(joltage[i])));
+                solver.Assert(ctx.MkEq(sum, ctx.MkInt(joltage[i])));
             }
 
             // Optimize the solve.
-            Optimize opt = ctx.MkOptimize();
-            foreach (var c in s.Assertions)
-                opt.Add(c);
+            Optimize optimize = ctx.MkOptimize();
+            foreach (var c in solver.Assertions)
+                optimize.Add(c);
 
             // Sum the total xn expressions
             ArithExpr total = ctx.MkInt(0);
-            foreach (var xi in xExpressions)
+            foreach (var xi in xVar)
                 total = ctx.MkAdd(total, xi);
 
-            Optimize.Handle h = opt.MkMinimize(total);
-            if (opt.Check() == Status.SATISFIABLE)
-            {
-                Model m = opt.Model;
-                result += ((IntNum)m.Evaluate(total)).Int;
-            }
+            Optimize.Handle h = optimize.MkMinimize(total);
+            if (optimize.Check() != Status.SATISFIABLE)
+                throw new InvalidOperationException("Unable to solve");
+
+            result += ((IntNum)optimize.Model.Evaluate(total)).Int;
         }
 
         return result.ToString();
