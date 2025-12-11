@@ -74,4 +74,50 @@
 
         public TResult Invoke(T1 arg1, T2 arg2) => InvokeInternal((arg1, arg2));
     }
+
+    public class Memoized<T1, T2, T3, TResult> : MemoizedBase<(T1, T2, T3), TResult>
+    {
+        public Memoized(Func<Memoized<T1, T2, T3, TResult>, T1, T2, T3, TResult> fn)
+        {
+            var self = new Memoized<T1, T2, T3, TResult>(this);
+            Fn = ((T1, T2, T3) args) =>
+            {
+                if (Cache.ContainsKey(args))
+                    return Cache[args];
+
+                var result = fn(self, args.Item1, args.Item2, args.Item3);
+                Cache.Add(args, result);
+                return result;
+            };
+        }
+
+        protected Memoized(Memoized<T1, T2, T3, TResult> self) : base(self)
+        {
+        }
+
+        public TResult Invoke(T1 arg1, T2 arg2, T3 arg3) => InvokeInternal((arg1, arg2, arg3));
+    }
+
+    public class Memoized<T1, T2, T3, T4, TResult> : MemoizedBase<(T1, T2, T3, T4), TResult>
+    {
+        public Memoized(Func<Memoized<T1, T2, T3, T4, TResult>, T1, T2, T3, T4, TResult> fn)
+        {
+            var self = new Memoized<T1, T2, T3, T4, TResult>(this);
+            Fn = ((T1, T2, T3, T4) args) =>
+            {
+                if (Cache.ContainsKey(args))
+                    return Cache[args];
+
+                var result = fn(self, args.Item1, args.Item2, args.Item3, args.Item4);
+                Cache.Add(args, result);
+                return result;
+            };
+        }
+
+        protected Memoized(Memoized<T1, T2, T3, T4, TResult> self) : base(self)
+        {
+        }
+
+        public TResult Invoke(T1 arg1, T2 arg2, T3 arg3, T4 arg4) => InvokeInternal((arg1, arg2, arg3, arg4));
+    }
 }
