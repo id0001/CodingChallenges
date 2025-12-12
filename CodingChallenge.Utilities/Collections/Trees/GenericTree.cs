@@ -35,9 +35,9 @@
                 return true;
             }
 
-            foreach(var child in Children)
+            foreach (var child in Children)
             {
-                if(child.TryFindNode(value ,out node))
+                if (child.TryFindNode(value, out node))
                     return true;
             }
 
@@ -50,6 +50,16 @@
                 return node!;
 
             throw new KeyNotFoundException($"A node with value '{value}' could not be found");
+        }
+
+        public IEnumerable<GenericTree<T>> FindNodes(Func<GenericTree<T>, bool> selector)
+        {
+            if (selector(this))
+                yield return this;
+
+            foreach (var child in Children)
+                foreach (var match in child.FindNodes(selector))
+                    yield return match;
         }
 
         public void MakeRoot() => MakeRoot(this);
