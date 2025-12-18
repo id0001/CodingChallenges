@@ -42,6 +42,9 @@ namespace CodingChallenge.Utilities.Core
         public async IAsyncEnumerable<RunResult> RunAsync(int challenge, bool shouldCopyResult)
         {
             var parts = GetParts(challenge);
+            if (parts.Length == 0)
+                yield break;
+
             var instance = CreateInstance(challenge)!;
             foreach (var (attr, method) in parts)
             {
@@ -83,6 +86,9 @@ namespace CodingChallenge.Utilities.Core
 
         private KeyValuePair<PartAttribute, MethodInfo>[] GetParts(int challenge)
         {
+            if (!_types.ContainsKey(challenge))
+                return [];
+
             var type = _types[challenge];
             return GetMethods(type).OrderBy(kv => kv.Key.Part).ToArray();
         }

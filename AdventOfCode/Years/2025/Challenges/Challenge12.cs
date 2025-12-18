@@ -6,7 +6,7 @@ namespace AdventOfCode2025.Challenges;
 [Challenge(12)]
 public class Challenge12
 {
-    [Part(1)]
+    [Part(1, "460")]
     public string Part1(string input)
     {
         var paragraphs = input.Paragraphs().ToArray();

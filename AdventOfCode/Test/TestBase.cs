@@ -14,7 +14,7 @@
             Context = await CreateContext();
         }
 
-        [Theory]
+        [SkippableTheory]
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
@@ -43,6 +43,8 @@
         public async Task TestDay(int day)
         {
             var (part1, part2) = await Context.ExecuteDayAsync(day);
+
+            Skip.If(part1 is null &&  part2 is null);
 
             if (part1 is { })
                 Assert.Equal(part1.ExpectedResult, part1.Result);

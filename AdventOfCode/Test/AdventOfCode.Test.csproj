@@ -12,13 +12,16 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+    <PackageReference Include="Xunit.SkippableFact" Version="1.5.23" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Core\AdventOfCode.Core.csproj" />
     <ProjectReference Include="..\Years\2015\2015.csproj" />
     <ProjectReference Include="..\Years\2016\2016.csproj" />
+    <ProjectReference Include="..\Years\2017\2017.csproj" />
     <ProjectReference Include="..\Years\2019\2019.csproj" />
+    <ProjectReference Include="..\Years\2025\2025.csproj" />
   </ItemGroup>
 
   <ItemGroup>
