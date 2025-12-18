@@ -8,10 +8,19 @@ namespace CodingChallenge.Utilities.Assembly
     {
         public int Length => Values.Length;
 
-        public object this[int index] => Values[index];
+        public string this[int index]
+        {
+            get
+            {
+                ArgumentOutOfRangeException.ThrowIfNegative(index);
+                ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Values.Length);
+                ArgumentNullException.ThrowIfNull(Values[index]);
+
+                return Convert.ToString(Values[index])!;
+            }
+        }
 
         public T GetValue<T>(int index, Func<string, T> lookup)
-            where T : IParsable<T>
         {
             ArgumentOutOfRangeException.ThrowIfNegative(index);
             ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Values.Length);
@@ -19,7 +28,15 @@ namespace CodingChallenge.Utilities.Assembly
             if (Values[index] is T value)
                 return value;
 
-            return lookup((string)Values[index]);
+            return lookup(this[index]);
+        }
+
+        public bool Is<T>(int index)
+        {
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Values.Length);
+
+            return Values[index] is T;
         }
 
         public static Arguments Parse<T1>(params string[] args)

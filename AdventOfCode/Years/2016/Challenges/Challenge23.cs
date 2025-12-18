@@ -46,7 +46,7 @@ public class Challenge23
         for (var ip = 0; ip >= 0 && ip < program.Length;)
         {
             // Multiply
-            if (ip + 5 < program.Length && program[ip + 5].OpCode == "jnz" && program[ip+5].Arguments.GetValue(1, r => memory[r]) == -5 && program[ip].Arguments[0] is string)
+            if (ip + 5 < program.Length && program[ip + 5].OpCode == "jnz" && program[ip + 5].Arguments.GetValue(1, r => memory[r]) == -5 && program[ip].Arguments.Is<string>(0))
             {
                 Multiply(program, memory, ip);
                 ip += 6;
@@ -129,9 +129,9 @@ public class Challenge23
             jnz d -5 -- d == multiplier (b * d)
         */
 
-        var resultReg = (string)program[ip+1].Arguments[0]; // a
-        var v1Reg = (string)program[ip].Arguments[0]; // b (b is not copied to c)
-        var v2Reg = (string)program[ip + 4].Arguments[0]; // d
+        var resultReg = program[ip + 1].Arguments[0]; // a
+        var v1Reg = program[ip].Arguments[0]; // b (b is not copied to c)
+        var v2Reg = program[ip + 4].Arguments[0]; // d
 
         registers[resultReg] = registers[v1Reg] * registers[v2Reg]; // a = b * d
         registers[v2Reg] = 0; // clear d
