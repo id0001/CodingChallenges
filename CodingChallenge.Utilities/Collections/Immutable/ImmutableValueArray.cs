@@ -35,6 +35,8 @@ namespace CodingChallenge.Utilities.Collections.Immutable
 
         public bool Equals(ImmutableValueArray<T> other) => other.SequenceEqual(_values);
 
+        public override bool Equals(object? obj) => obj is ImmutableValueArray<T> array && Equals(array);
+
         public override int GetHashCode()
         {
             var hc = new HashCode();
@@ -47,8 +49,13 @@ namespace CodingChallenge.Utilities.Collections.Immutable
         public ImmutableValueArray<T> SetItem(int index, T item) => _values.SetItem(index, item);
 
         public static implicit operator ImmutableValueArray<T>(ImmutableArray<T> value) => new ImmutableValueArray<T>(value);
+
         public static implicit operator ImmutableArray<T>(ImmutableValueArray<T> value) => value._values;
+
+        public static implicit operator ImmutableValueArray<T>(T[] value) => new ImmutableValueArray<T>(value);
+
         public static bool operator ==(ImmutableValueArray<T> a, ImmutableValueArray<T> b) => a.Equals(b);
+
         public static bool operator !=(ImmutableValueArray<T> a, ImmutableValueArray<T> b) => !a.Equals(b);
 
         private sealed class DebugView(ImmutableValueArray<T> array)
