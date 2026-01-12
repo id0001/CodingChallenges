@@ -102,7 +102,7 @@
             node.AddChild(parent);
         }
 
-        public class Builder(IEnumerable<(T Parent, T Child)> items)
+        public class Builder(IEnumerable<(T Parent, T Child)> relations)
         {
             public GenericTree<T> Build()
             {
@@ -110,13 +110,12 @@
                 var rootCandidates = new HashSet<T>();
                 var childNodes = new HashSet<T>();
 
-                foreach (var (parent, child) in items)
+                foreach (var (parent, child) in relations)
                 {
                     children.TryAdd(parent, []);
                     children[parent].Add(child);
 
                     rootCandidates.Add(parent);
-                    rootCandidates.Add(child);
                     childNodes.Add(child);
                 }
 
@@ -135,11 +134,19 @@
 
             private void BuildTree(GenericTree<T> root, Dictionary<T, List<T>> children)
             {
-                if (!children.ContainsKey(root.Value))
-                    return;
+                var stack = new Stack<GenericTree<T>>();
+                stack.Push(root);
 
-                foreach (var child in children[root.Value])
-                    BuildTree(root.AddChild(child), children);
+                while (stack.Count > 0)
+                {
+                    var current = stack.Pop();
+
+                    if (!children.ContainsKey(current.Value))
+                        continue;
+
+                    foreach (var child in children[current.Value])
+                        stack.Push(current.AddChild(child));
+                }
             }
         }
     }
