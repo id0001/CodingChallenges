@@ -88,7 +88,7 @@ public class Challenge18
         .Transform(args => new Instruction(args[0], args.Length switch
         {
             3 => Arguments.Parse<long, long>(args[1..]),
-            2 => Arguments.Parse<string>(args[1..]),
+            2 => Arguments.Parse<long>(args[1..]),
             _ => throw new NotSupportedException()
         }));
 
