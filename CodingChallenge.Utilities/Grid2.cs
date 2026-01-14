@@ -60,9 +60,9 @@ namespace CodingChallenge.Utilities
 
         public Grid2(int rows, int columns) : this(new T[rows, columns]) { }
 
-        public int Columns => Bounds.Width;
+        public int ColumnCount => Bounds.Width;
 
-        public int Rows => Bounds.Height;
+        public int RowCount => Bounds.Height;
 
         public Rectangle Bounds { get; }
 

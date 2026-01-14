@@ -31,10 +31,10 @@
             {
                 ArgumentNullException.ThrowIfNull(source);
 
-                var result = new TSource[source.Rows, source.Columns];
-                for (var y = 0; y < source.Rows; y++)
+                var result = new TSource[source.RowCount, source.ColumnCount];
+                for (var y = 0; y < source.RowCount; y++)
                 {
-                    for (var x = 0; x < source.Columns; x++)
+                    for (var x = 0; x < source.ColumnCount; x++)
                         result[y, x] = source[y, x];
                 }
 

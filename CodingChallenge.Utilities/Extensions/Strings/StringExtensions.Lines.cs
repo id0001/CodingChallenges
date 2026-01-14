@@ -8,14 +8,14 @@
             {
                 ArgumentNullException.ThrowIfNull(source);
 
-                return source.SplitBy(Environment.NewLine);
+                return source.Split(Environment.NewLine, StringSplitOptions.None);
             }
 
             public IEnumerable<T> Lines<T>(Func<string, T> selector)
             {
                 ArgumentNullException.ThrowIfNull(source);
 
-                return source.SplitBy(Environment.NewLine).Select(selector);
+                return source.Split(Environment.NewLine, StringSplitOptions.None).Select(selector);
             }
         }
     }

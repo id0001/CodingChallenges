@@ -13,17 +13,17 @@ public class Challenge06
         var grid = new Grid2<string>(input.Lines(line => line.SplitBy(" ").ToArray()).ToArray().To2dArray());
 
         long sum = 0;
-        for (var x = 0; x < grid.Columns; x++)
+        for (var x = 0; x < grid.ColumnCount; x++)
         {
             long value = grid[0, x].As<long>();
-            switch (grid[grid.Rows - 1, x])
+            switch (grid[grid.RowCount - 1, x])
             {
                 case "*":
-                    for (var y = 1; y < grid.Rows - 1; y++)
+                    for (var y = 1; y < grid.RowCount - 1; y++)
                         value *= grid[y, x].As<long>();
                     break;
                 case "+":
-                    for (var y = 1; y < grid.Rows - 1; y++)
+                    for (var y = 1; y < grid.RowCount - 1; y++)
                         value += grid[y, x].As<long>();
                     break;
             }
@@ -41,14 +41,14 @@ public class Challenge06
 
         var numbers = new List<long>();
         var sum = 0L;
-        for (var x = grid.Columns - 1; x >= 0; x--)
+        for (var x = grid.ColumnCount - 1; x >= 0; x--)
         {
             var number = grid.Column(x).Where(char.IsNumber).AsString().As<long>();
             numbers.Add(number);
 
-            if (grid[grid.Rows - 1, x] != ' ')
+            if (grid[grid.RowCount - 1, x] != ' ')
             {
-                switch (grid[grid.Rows - 1, x])
+                switch (grid[grid.RowCount - 1, x])
                 {
                     case '*':
                         sum += numbers.Product();

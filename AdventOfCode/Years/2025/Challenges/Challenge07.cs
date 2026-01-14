@@ -31,7 +31,7 @@ public class Challenge07
         var start = grid.First(x => x.Value == 'S').Key;
         var digraph = CreateGraph(grid, start);
 
-        var paths = CountPaths(digraph, start, grid.Rows - 1);
+        var paths = CountPaths(digraph, start, grid.RowCount - 1);
 
         return paths.ToString();
     }
@@ -41,7 +41,7 @@ public class Challenge07
         var edges = new HashSet<(Point2, Point2)> { (start, start.Down) };
         var graph = new Digraph<Point2>();
 
-        for (var y = 0; y < grid.Rows - 2; y++)
+        for (var y = 0; y < grid.RowCount - 2; y++)
         {
             var nextEdges = new HashSet<(Point2, Point2)>();
             foreach (var (p,v) in edges)

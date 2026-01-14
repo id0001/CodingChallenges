@@ -13,7 +13,7 @@ public class Challenge24
     public string Part1(string input)
     {
         var readgrid = input.ToGrid();
-        var writegrid = new Grid2<char>(readgrid.Rows, readgrid.Columns);
+        var writegrid = new Grid2<char>(readgrid.RowCount, readgrid.ColumnCount);
 
         var history = new HashSet<string>();
         var dataString = readgrid.ToString();

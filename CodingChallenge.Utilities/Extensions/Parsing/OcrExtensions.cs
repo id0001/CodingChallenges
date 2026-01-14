@@ -40,9 +40,9 @@ namespace CodingChallenge.Utilities.Extensions
                 ArgumentNullException.ThrowIfNull(source);
 
                 var sb = new StringBuilder();
-                for (var y = 0; y < source.Rows; y++)
+                for (var y = 0; y < source.RowCount; y++)
                 {
-                    for (var x = 0; x < source.Columns; x++) sb.Append(source[y, x] ? '#' : '.');
+                    for (var x = 0; x < source.ColumnCount; x++) sb.Append(source[y, x] ? '#' : '.');
 
                     sb.AppendLine();
                 }

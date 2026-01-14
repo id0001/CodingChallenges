@@ -27,7 +27,7 @@ public class Challenge03
 
         foreach(var p in SpiralEnumerable().Skip(1))
         {
-            map[p] = p.GetNeighbors(true).Sum(n => map.GetValueOrDefault(n, 0));
+            map[p] = p.GetNeighbors(true).Sum(n => map[n]);
             if (map[p] > n)
                 return map[p].ToString();
         }

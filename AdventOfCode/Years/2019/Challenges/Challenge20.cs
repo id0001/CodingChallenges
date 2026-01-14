@@ -80,7 +80,7 @@ public class Challenge20
                 {
                     var dir = neighbor - p;
                     var name = GetName(grid, neighbor, dir);
-                    var isOuter = p.X == 2 || p.X == grid.Columns - 3 || p.Y == 2 || p.Y == grid.Rows - 3;
+                    var isOuter = p.X == 2 || p.X == grid.ColumnCount - 3 || p.Y == 2 || p.Y == grid.RowCount - 3;
 
                     portals.Add(p, new Portal(p, name, isOuter ? PortalType.Outer : PortalType.Inner));
                 }

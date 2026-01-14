@@ -67,7 +67,7 @@ public class Challenge15
                 space[next] = Node.Open;
                 foreach (var neighbor in next.GetNeighbors())
                 {
-                    if (!space.ContainsPoint(neighbor))
+                    if (space[neighbor] == Node.Unknown)
                         MapSpace(space, cpu, next, neighbor);
                 }
                 Move(cpu, current - next);
@@ -85,7 +85,7 @@ public class Challenge15
     {
         foreach (var neighbor in current.GetNeighbors())
         {
-            if (space.ContainsPoint(neighbor) && space[neighbor] != Node.Wall)
+            if (space[neighbor] is not Node.Unknown and not Node.Wall)
                 yield return (current, neighbor);
         }
     }
@@ -115,6 +115,7 @@ public class Challenge15
 
     private enum Node
     {
+        Unknown,
         Open,
         Wall,
         Target

@@ -8,10 +8,10 @@
             {
                 ArgumentNullException.ThrowIfNull(source);
 
-                var updated = new Grid2<T>(source.Rows, source.Columns);
-                for (var y = 0; y < source.Rows; y++)
-                    for (var x = 0; x < source.Columns; x++)
-                        updated[updated.Rows - 1 - y, x] = source[y, x];
+                var updated = new Grid2<T>(source.RowCount, source.ColumnCount);
+                for (var y = 0; y < source.RowCount; y++)
+                    for (var x = 0; x < source.ColumnCount; x++)
+                        updated[updated.RowCount - 1 - y, x] = source[y, x];
 
                 return updated;
             }
@@ -20,10 +20,10 @@
             {
                 ArgumentNullException.ThrowIfNull(source);
 
-                var updated = new Grid2<T>(source.Rows, source.Columns);
-                for (var y = 0; y < source.Rows; y++)
-                    for (var x = 0; x < source.Columns; x++)
-                        updated[y, updated.Columns - 1 - x] = source[y, x];
+                var updated = new Grid2<T>(source.RowCount, source.ColumnCount);
+                for (var y = 0; y < source.RowCount; y++)
+                    for (var x = 0; x < source.ColumnCount; x++)
+                        updated[y, updated.ColumnCount - 1 - x] = source[y, x];
 
                 return updated;
             }

@@ -4,10 +4,12 @@ namespace CodingChallenge.Utilities.Collections
 {
     public class SpatialMap3<T> : IEnumerable<KeyValuePair<Point3, T>>
     {
-        public readonly Dictionary<Point3, T> _data = [];
+        private readonly Dictionary<Point3, T> _data = [];
+        private readonly T? _defaultValue;
 
-        public SpatialMap3()
+        public SpatialMap3(T? defaultValue = default)
         {
+            _defaultValue = defaultValue;
         }
 
         public Cube Bounds { get; private set; }
@@ -20,11 +22,23 @@ namespace CodingChallenge.Utilities.Collections
             set => Set(coord, value);
         }
 
+        public T this[int z, int y, int x]
+        {
+            get => GetValue(new Point3(x, y, z));
+            set => Set(new Point3(x, y, z), value);
+        }
+
         public void Set(Point3 point, T value)
         {
             bool inflate = !_data.ContainsKey(point);
 
-            _data[point] = value;
+            if (value is null || EqualityComparer<T>.Default.Equals(value, _defaultValue))
+            {
+                Unset(point);
+                return;
+            }
+
+            _data[point] = value!;
 
             if (inflate)
                 InflateBounds(point);
@@ -36,13 +50,7 @@ namespace CodingChallenge.Utilities.Collections
                 DeflateBounds(point);
         }
 
-        public T GetValue(Point3 coord) => _data[coord];
-
-        public T? GetValueOrDefault(Point3 coord) => _data.GetValueOrDefault(coord);
-
-        public T GetValueOrDefault(Point3 coord, T defaultValue) => _data.GetValueOrDefault(coord, defaultValue);
-
-        public bool ContainsPoint(Point3 coord) => _data.ContainsKey(coord);
+        public T GetValue(Point3 coord) => _data.GetValueOrDefault(coord, _defaultValue!);
 
         private void InflateBounds(Point3 added)
         {

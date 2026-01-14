@@ -32,7 +32,7 @@ public class Challenge17
                     continue;
                 }
 
-                spatialMap.Set(new Point2(x, y), o);
+                spatialMap[y, x] = o;
                 x++;
             }
         }
@@ -91,5 +91,5 @@ public class Challenge17
         return dustCount.ToString();
     }
 
-    private static bool IsIntersection(SpatialMap2<int> map, Point2 p) => p.GetNeighbors().All(n => map.GetValueOrDefault(n, 0) == 35);
+    private static bool IsIntersection(SpatialMap2<int> map, Point2 p) => p.GetNeighbors().All(n => map[n] == 35);
 }
