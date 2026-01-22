@@ -58,10 +58,7 @@ public class Challenge07
             }
         }
 
-        return new GenericTree<Node>
-            .Builder(nodes
-                .Select(x => (new Node(x.Item1, weights[x.Item1]), new Node(x.Item2, weights[x.Item2]))))
-            .Build();
+        return GenericTree.From(nodes.Select(x => (new Node(x.Item1, weights[x.Item1]), new Node(x.Item2, weights[x.Item2]))));
     }
 
     private record Node(string Name, int Weight);

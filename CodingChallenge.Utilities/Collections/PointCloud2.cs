@@ -34,6 +34,12 @@ namespace CodingChallenge.Utilities.Collections
 
         private void InflateBounds(Point2 added)
         {
+            if(Bounds == Rectangle.Empty)
+            {
+                Bounds = new Rectangle(added.X, added.Y, 1, 1);
+                return;
+            }
+
             int minX = Math.Min(Bounds.Left, added.X);
             int minY = Math.Min(Bounds.Top, added.Y);
             int maxX = Math.Max(Bounds.Right, added.X + 1);

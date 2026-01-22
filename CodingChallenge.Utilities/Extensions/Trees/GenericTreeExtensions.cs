@@ -1,6 +1,6 @@
 ﻿using CodingChallenge.Utilities.Collections.Trees;
 
-namespace CodingChallenge.Utilities.Extensions.Trees
+namespace CodingChallenge.Utilities.Extensions
 {
     public static class GenericTreeExtensions
     {

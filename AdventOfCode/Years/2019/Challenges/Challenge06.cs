@@ -10,14 +10,14 @@ public class Challenge06
     [Part(1, "142915")]
     public string Part1(string input)
     {
-        var root = new GenericTree<string>.Builder(input.Lines(line => line.SplitBy<string, string>(")"))).Build();
+        var root = GenericTree.From(input.Lines(line => line.SplitBy<string, string>(")")));
         return SumDepth(root).ToString();
     }
 
     [Part(2, "283")]
     public string Part2(string input)
     {
-        var root = new GenericTree<string>.Builder(input.Lines(line => line.SplitBy<string, string>(")"))).Build();
+        var root = GenericTree.From(input.Lines(line => line.SplitBy<string, string>(")")));
         root = root.FindNode("YOU");
         root.MakeRoot();
         return (root.FindNode("SAN").Depth - 2).ToString();
