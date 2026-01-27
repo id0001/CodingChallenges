@@ -8,11 +8,11 @@ namespace CodingChallenge.Utilities.Utilities
     /// <typeparam name="T"></typeparam>
     public record SummedAreaTable<T> where T : IBinaryInteger<T>
     {
-        private readonly T[,] _aux;
+        private readonly Grid2<T> _aux;
 
-        public SummedAreaTable(T[,] sourceTable)
+        public SummedAreaTable(Grid2<T> sourceTable)
         {
-            _aux = Preprocess(sourceTable);
+            _aux = SummedAreaTable<T>.Preprocess(sourceTable);
         }
 
         public T SumQuery(int x, int y, int width, int height)
@@ -34,22 +34,19 @@ namespace CodingChallenge.Utilities.Utilities
             return res;
         }
 
-        private T[,] Preprocess(T[,] source)
+        private static Grid2<T> Preprocess(Grid2<T> source)
         {
-            var height = source.GetLength(0);
-            var width = source.GetLength(1);
+            var aux = new Grid2<T>(source.RowCount, source.ColumnCount);
 
-            var aux = new T[height, width];
-
-            for (var x = 0; x < width; x++)
+            for (var x = 0; x < source.ColumnCount; x++)
                 aux[0, x] = source[0, x];
 
-            for (var y = 1; y < height; y++)
-                for (var x = 0; x < width; x++)
+            for (var y = 1; y < source.RowCount; y++)
+                for (var x = 0; x < source.ColumnCount; x++)
                     aux[y, x] = source[y, x] + aux[y - 1, x];
 
-            for (var y = 0; y < height; y++)
-                for (var x = 1; x < width; x++)
+            for (var y = 0; y < source.RowCount; y++)
+                for (var x = 1; x < source.ColumnCount; x++)
                     aux[y, x] += aux[y, x - 1];
 
             return aux;
