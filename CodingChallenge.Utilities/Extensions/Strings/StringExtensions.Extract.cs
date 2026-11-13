@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
-using static System.Object;
 
 namespace CodingChallenge.Utilities.Extensions
 {
