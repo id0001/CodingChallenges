@@ -28,6 +28,18 @@ namespace CodingChallenge.Utilities.Collections
             set => Set(new Point2(x, y), value);
         }
 
+        public T GetValue(Point2 coord) => _data.GetValueOrDefault(coord, _defaultValue!);
+
+        public bool ContainsKey(Point2 coord) => _data.ContainsKey(coord);
+
+        public T GetOrAdd(Point2 coord, T value)
+        {
+            if (!ContainsKey(coord))
+                Set(coord, value);
+
+            return GetValue(coord);
+        }
+
         private void Set(Point2 point, T? value)
         {
             bool inflate = !_data.ContainsKey(point);
@@ -49,8 +61,6 @@ namespace CodingChallenge.Utilities.Collections
             if (_data.Remove(point))
                 DeflateBounds(point);
         }
-
-        public T GetValue(Point2 coord) => _data.GetValueOrDefault(coord, _defaultValue!);
 
         private void InflateBounds(Point2 added)
         {
