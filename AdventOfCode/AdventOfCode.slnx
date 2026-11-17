@@ -5,6 +5,7 @@
     <Project Path="Years/2017/2017.csproj" Id="6f1b544c-5667-48ee-8942-21cdf59ccfc2" />
     <Project Path="Years/2018/2018.csproj" Id="dda1dcc0-aeda-4ed2-869b-79c2d595e4c1" />
     <Project Path="Years/2019/2019.csproj" Id="aa397a2f-4647-46e1-a741-1cc0db528b38" />
+    <Project Path="Years/2020/2020.csproj" />
     <Project Path="Years/2025/2025.csproj" />
   </Folder>
   <Project Path="../CodingChallenge.Utilities/CodingChallenge.Utilities.csproj" />

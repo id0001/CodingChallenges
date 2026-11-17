@@ -100,6 +100,16 @@ namespace CodingChallenge.Utilities
             return sb.ToString();
         }
 
+        public override int GetHashCode()
+        {
+            var hash = new HashCode();
+            for(var row = 0; row < _grid.GetLength(0); row++)
+                for (var col = 0; col < _grid.GetLength(1); col++)
+                    hash.Add(_grid[row, col]);
+
+            return hash.ToHashCode();
+        }
+
         public string ToString(Func<Point2, T, char> resultSelector)
         {
             var sb = new StringBuilder();
