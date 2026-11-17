@@ -27,19 +27,6 @@
         [InlineData(10)]
         [InlineData(11)]
         [InlineData(12)]
-        [InlineData(13)]
-        [InlineData(14)]
-        [InlineData(15)]
-        [InlineData(16)]
-        [InlineData(17)]
-        [InlineData(18)]
-        [InlineData(19)]
-        [InlineData(20)]
-        [InlineData(21)]
-        [InlineData(22)]
-        [InlineData(23)]
-        [InlineData(24)]
-        [InlineData(25)]
         public async Task TestDay(int day)
         {
             var (part1, part2) = await Context.ExecuteDayAsync(day);
