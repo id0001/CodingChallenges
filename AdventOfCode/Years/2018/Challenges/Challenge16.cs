@@ -16,7 +16,7 @@ public class Challenge16
     public string Part1(string input)
     {
         var (tests, _) = Parse(input);
-        return tests.Count(t => GetMatchingOperations(Arguments.Parse<int, int, int>(t.Input[1..]), t.Before, t.After).Count >= 3).ToString();
+        return tests.Count(t => GetMatchingOperations((Arguments<int, int, int>)Arguments.Parse<int, int, int>(t.Input[1..]), t.Before, t.After).Count >= 3).ToString();
     }
 
     [Part(2, "503")]
@@ -52,7 +52,7 @@ public class Challenge16
             // Run all tests and remove any operations that do not match the before/after state for the given arguments from the candidates for the given opcode
             foreach (var test in tests)
             {
-                var matches = GetMatchingOperations(Arguments.Parse<int,int, int>(test.Input[1..]), test.Before, test.After);
+                var matches = GetMatchingOperations((Arguments<int, int, int>)Arguments.Parse<int,int, int>(test.Input[1..]), test.Before, test.After);
                 foreach (var failedOperation in Operations.Except(matches))
                     candidates[test.Input[0].As<int>()].Remove(failedOperation);
             }

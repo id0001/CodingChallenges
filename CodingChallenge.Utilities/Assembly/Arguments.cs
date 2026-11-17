@@ -39,7 +39,7 @@ namespace CodingChallenge.Utilities.Assembly
             return Values[index] is T;
         }
 
-        public static Arguments<T1> Parse<T1>(params string[] args)
+        public static Arguments Parse<T1>(params string[] args)
             where T1 : IParsable<T1>
         {
             ArgumentOutOfRangeException.ThrowIfNotEqual(args.Length, 1);
@@ -52,10 +52,10 @@ namespace CodingChallenge.Utilities.Assembly
             var openGenericType = typeof(Arguments<>);
             var closedGenericType = openGenericType.MakeGenericType(genericTypes);
 
-            return (Arguments<T1>)Activator.CreateInstance(closedGenericType, values)!;
+            return (Arguments)Activator.CreateInstance(closedGenericType, values)!;
         }
 
-        public static Arguments<T1,T2> Parse<T1, T2>(params string[] args)
+        public static Arguments Parse<T1, T2>(params string[] args)
             where T1 : IParsable<T1>
             where T2 : IParsable<T2>
         {
@@ -70,10 +70,10 @@ namespace CodingChallenge.Utilities.Assembly
             var openGenericType = typeof(Arguments<,>);
             var closedGenericType = openGenericType.MakeGenericType(genericTypes);
 
-            return (Arguments<T1,T2>)Activator.CreateInstance(closedGenericType, values)!;
+            return (Arguments)Activator.CreateInstance(closedGenericType, values)!;
         }
 
-        public static Arguments<T1,T2,T3> Parse<T1, T2, T3>(params string[] args)
+        public static Arguments Parse<T1, T2, T3>(params string[] args)
             where T1 : IParsable<T1>
             where T2 : IParsable<T2>
             where T3 : IParsable<T3>
@@ -90,7 +90,7 @@ namespace CodingChallenge.Utilities.Assembly
             var openGenericType = typeof(Arguments<,,>);
             var closedGenericType = openGenericType.MakeGenericType(genericTypes);
 
-            return (Arguments<T1,T2,T3>)Activator.CreateInstance(closedGenericType, values)!;
+            return (Arguments)Activator.CreateInstance(closedGenericType, values)!;
         }
 
         public static Arguments<T1,T2,T3,T4> Parse<T1, T2, T3, T4>(params string[] args)
@@ -115,7 +115,7 @@ namespace CodingChallenge.Utilities.Assembly
             return (Arguments<T1, T2, T3, T4>)Activator.CreateInstance(closedGenericType, values)!;
         }
 
-        public static Arguments<T1, T2, T3, T4, T5> Parse<T1, T2, T3, T4, T5>(params string[] args)
+        public static Arguments Parse<T1, T2, T3, T4, T5>(params string[] args)
             where T1 : IParsable<T1>
             where T2 : IParsable<T2>
             where T3 : IParsable<T3>
@@ -136,7 +136,7 @@ namespace CodingChallenge.Utilities.Assembly
             var openGenericType = typeof(Arguments<,,,,>);
             var closedGenericType = openGenericType.MakeGenericType(genericTypes);
 
-            return (Arguments<T1, T2, T3, T4, T5>)Activator.CreateInstance(closedGenericType, values)!;
+            return (Arguments)Activator.CreateInstance(closedGenericType, values)!;
         }
 
         private static void DetermineTypeAndValue<T>(int i, string[] args, Type[] types, object[] values) where T : IParsable<T>
