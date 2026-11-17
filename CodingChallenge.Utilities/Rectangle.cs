@@ -1,4 +1,6 @@
-﻿namespace CodingChallenge.Utilities
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace CodingChallenge.Utilities
 {
     public readonly record struct Rectangle(int X, int Y, int Width, int Height)
     {
@@ -31,6 +33,16 @@
 
         public Rectangle Expand(int amount)
             => new(X - amount, Y - amount, Width + amount, Height + amount);
+
+        public IEnumerable<Rectangle> Subdivide(int divisor)
+        {
+            if (Width % divisor != 0 || Height % divisor != 0)
+                throw new ArgumentException($"Cannot subdivide rectangle {this} into {divisor} parts.");
+
+            for (var y = Top; y < Bottom; y += Height / divisor)
+                for (var x = Left; x < Right; x += Width / divisor)
+                    yield return new Rectangle(x, y, Width / divisor, Height / divisor);
+        }
 
         public static bool Intersects(Rectangle a, Rectangle b) =>
             b.Left < a.Right && a.Left < b.Right && b.Top < a.Bottom && a.Top < b.Bottom;

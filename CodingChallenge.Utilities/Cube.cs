@@ -1,4 +1,6 @@
-﻿namespace CodingChallenge.Utilities
+﻿using CodingChallenge.Utilities.Mathematics;
+
+namespace CodingChallenge.Utilities
 {
     public readonly record struct Cube(int X, int Y, int Z, int Width, int Height, int Depth)
     {
@@ -85,6 +87,17 @@
 
         public bool Contains(Point3 p)
             => p.X >= Left && p.X < Right && p.Y >= Top && p.Y < Bottom && p.Z >= Front && p.Z < Back;
+
+        public IEnumerable<Cube> Subdivide(int divisor)
+        {
+            if(Width % divisor != 0 || Height % divisor != 0 || Depth % divisor != 0)
+                throw new ArgumentException($"Cannot subdivide cube {this} into {divisor} parts.");
+
+            for(var z = Front; z < Back; z += Depth / divisor)
+                for (var y = Top; y < Bottom; y += Height / divisor)
+                    for (var x = Left; x < Right; x += Width / divisor)
+                        yield return new Cube(x, y, z, Width / divisor, Height / divisor, Depth / divisor);
+        }
 
         public static bool Intersects(Cube a, Cube b)
             => b.Left < a.Right
